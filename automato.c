@@ -26,4 +26,5 @@ char* analisarToken(char string[]) {
         return ret;
     }
     return ret;
+
 }
