@@ -14,11 +14,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lexico.h"
+#include "automato.h"
 
 /*
  * 
  */
 int main(int argc, char** argv) {
+    char *tokenType1 = analisarToken("\"teste\"");
+    printf("%s\n", tokenType1);
+    
     return (EXIT_SUCCESS);
 }
 

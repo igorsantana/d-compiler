@@ -8,7 +8,7 @@ struct token {
     char tipo[255];
 };
 
-struct token analisarToken(char string[]);
+char* analisarToken(char string[]);
 
 
 #endif /* AUTOMATO_H */
