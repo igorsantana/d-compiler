@@ -19,6 +19,14 @@
  * 
  */
 int main(int argc, char** argv) {
+    abrirArquivo("teste.d");
+    int i;
+    Token token;
+    for(i = 0;i< 12;i++){
+        token = getToken();
+        printf("%s",token.token);
+    }
+    
     return (EXIT_SUCCESS);
 }
 
