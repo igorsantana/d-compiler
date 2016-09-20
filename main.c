@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     Token token;
     for(i = 0;i< 12;i++){
         token = getToken();
-        printf("%s",token.token);
+        printf("%s \n",token.token);
     }
     
     return (EXIT_SUCCESS);

@@ -33,15 +33,15 @@ Token pegaProximoToken() {
             i = 1;
         } else {
             c = ultimoLido = fgetc(arquivo);
-//            if (isSeparador(c)) {
-//                buffer[0] = c;
-//                buffer[1] = '\0';
-//                i = 1;
-//            }
+            
         }
     }while (!isCaracterValido(c));
-    
-                printf("\n %c %i ----",c,isSeparador(c));
+    if (isSeparador(c)) {
+        buffer[0] = c;
+        buffer[1] = '\0';
+        i = 1;
+    }
+//                printf("\n %c %i ----",c,isSeparador(c));
 
     while (isSeparador(c) != 1 && c != EOF) {
 
