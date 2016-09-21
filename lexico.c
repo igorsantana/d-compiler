@@ -8,9 +8,9 @@
 #include <string.h>
 
 FILE* arquivo;
-int offsetGeral;
-int posicaoLinha;
-int posicaoColuna;
+int offsetGeral = 0;
+int posicaoLinha = 1;
+int posicaoColuna = 0;
 Token anterior;
 char ultimoLido;
 
@@ -26,39 +26,36 @@ Token pegaProximoToken() {
         if (ultimoLido && isCaracterValido(c)) {
             buffer[0] = c;
             buffer[1] = '\0';
-            if (isSeparador(c)) {
-//                    printf("%c ---- ",c);
-                ultimoLido = fgetc(arquivo);
-            }
             i = 1;
         } else {
-            c = ultimoLido = fgetc(arquivo);
-            
+            c = ultimoLido = leCharArq();
         }
-    }while (!isCaracterValido(c));
+    } while (!isCaracterValido(c));
+
+    toReturn = setaLinhaColuna(toReturn);
     if (isSeparador(c)) {
         buffer[0] = c;
         buffer[1] = '\0';
         i = 1;
+        ultimoLido = leCharArq();
     }
-//                printf("\n %c %i ----",c,isSeparador(c));
-
+    //                printf("\n %c %i ----",c,isSeparador(c));
     while (isSeparador(c) != 1 && c != EOF) {
 
         if (c == '/') { // tratamentos de comentários
-            c = fgetc(arquivo);
+            c = leCharArq();
             if (c == '/') { // comentários em mesma linha
                 while (c != 13 && c != EOF) {
-                    c = fgetc(arquivo);
+                    c = leCharArq();
                 }
             } else if (c == '*') { //comentários entre /**/
-                c = fgetc(arquivo);
+                c = leCharArq();
 
                 while (c != EOF) {
-                    c = fgetc(arquivo);
+                    c = leCharArq();
 
                     if (c == '*') {
-                        c = fgetc(arquivo);
+                        c = leCharArq();
 
                         if (c == '/') {
                             break;
@@ -67,17 +64,41 @@ Token pegaProximoToken() {
                 }
             }
         } // fim de tratamento de comentários
-
         buffer[i] = c;
         i++;
         buffer[i] = '\0';
-        c = ultimoLido = fgetc(arquivo);
+        c = ultimoLido = leCharArq();
     }
-//    toReturn.token[0] = '\0';
+    
+    printf("%c %i\t",ultimoLido, ultimoLido);
     strcpy(toReturn.token, buffer);
 
-    //        printf("%s\n",buffer);
     return toReturn;
+}
+
+Token setaLinhaColuna(Token token) {
+    token.coluna = posicaoColuna;
+    token.linha = posicaoLinha;
+
+    return token;
+}
+
+char leCharArq() {
+    offsetGeral++;
+    posicaoColuna++;
+    char c = fgetc(arquivo);
+    switch (c) {
+        case '\n':
+            posicaoColuna = 0;
+            posicaoLinha++;
+            break;
+        case '\t':
+            posicaoColuna += 3;
+            offsetGeral += 3;
+            break;
+    }
+
+    return c;
 }
 
 int isCaracterValido(char c) {
@@ -111,6 +132,7 @@ int isSeparador(char c) {
     arraySeparadores[2] = '{';
     arraySeparadores[3] = '}';
     arraySeparadores[4] = '\t';
+    arraySeparadores[5] = '\n';
 
     for (i = 0; i < 5; i++) {
         if (arraySeparadores[i] == c) {
@@ -118,6 +140,7 @@ int isSeparador(char c) {
             break;
         }
     }
+
     return 0;
 }
 

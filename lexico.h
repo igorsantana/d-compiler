@@ -41,6 +41,10 @@ extern "C" {
     int isSeparadorUtil(char c);
     
     int isCaracterValido(char c);
+    
+    char leCharArq();
+    
+    Token setaLinhaColuna(Token token);
 
 
 
