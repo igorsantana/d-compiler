@@ -20,12 +20,13 @@
  * 
  */
 int main(int argc, char** argv) {
-    char *tokenType1 = analisarToken("1");
+    char *tokenType1 = analisarToken("1.2");
     printf("%s\n", tokenType1);
-    char *tokenType2 = analisarToken("_1");
+    char *tokenType2 = analisarToken("213.152");
     printf("%s\n", tokenType2);
-    char *tokenType3 = analisarToken("1121_12123_12121");
+    char *tokenType3 = analisarToken("__a");
     printf("%s\n", tokenType3);
+
     char *tokenType4 = analisarToken("121aeriejrçiewo");
     printf("%s\n", tokenType4);
     char *tokenType5 = analisarToken("__FILE__");
