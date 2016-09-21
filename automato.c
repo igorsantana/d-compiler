@@ -2,29 +2,33 @@
 #include <string.h>
 #include <regex.h>
 
-int analisaIdentificador(char string[]){
-    char identificadores[] = "^(([:alpha:]{1}([.]*))|(_[^_][.]*))";
-    regex_t reg;
-    regcomp(&reg, identificadores, REG_EXTENDED|REG_NOSUB);
-    return regexec(&reg, string, 0, (regmatch_t *)NULL, 0);
-}
-int analisaString(char string[]){
-    char identificadores[] = "^\".*\"[cwd]{0,1}";
-    regex_t reg;
-    regcomp(&reg, identificadores, REG_EXTENDED|REG_NOSUB);
-    return regexec(&reg, string, 0, (regmatch_t *)NULL, 0);
-}
-
 char* analisarToken(char string[]) {
-    char* ret = "NÃO IDENTIFICADOR";
-    if(analisaIdentificador(string) == 0){
-        ret = "IDENTIFICADOR";
-        return ret;
+    char identificadoresExp[]   = "^(([:alpha:]{1}([.]*))|(_[^_][.]*))$";
+    char stringsExp[]           = "^\".*\"[cwd]{0,1}$";
+    char integerExp[]           = "^[[:digit:]]*[ulUL]?$";
+    char caracterExp[]          = "\'\\?[[:word:]]{1}\'";
+    
+    regex_t regExpIdentificador;
+    regex_t regExpString;
+    regex_t regExpInteger;
+    regex_t caracterExp;
+    
+    regcomp(&regExpIdentificador, identificadoresExp, REG_EXTENDED|REG_NOSUB);
+    regcomp(&regExpString, stringsExp, REG_EXTENDED|REG_NOSUB);
+    regcomp(&regExpInteger, integerExp, REG_EXTENDED|REG_NOSUB);
+    
+    if(regexec(&regExpInteger, string, 0, (regmatch_t *)NULL, 0)){
+        return "INTEGER";
     }
-    if(analisaString(string) == 0){
-        ret = "STRING";
-        return ret;
+    if(regexec(&regExpIdentificador, string, 0, (regmatch_t *)NULL, 0)){
+        return "IDENTIFICADOR";
     }
-    return ret;
+    if(regexec(&regExpString, string, 0, (regmatch_t *)NULL, 0)){
+        return "STRING";
+    }
+    
+    
+   
+    return "ERROR";
 
 }

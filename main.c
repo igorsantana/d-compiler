@@ -20,8 +20,14 @@
  * 
  */
 int main(int argc, char** argv) {
-    char *tokenType1 = analisarToken("\"teste\"");
+    char *tokenType1 = analisarToken("1");
     printf("%s\n", tokenType1);
+    char *tokenType2 = analisarToken("_1");
+    printf("%s\n", tokenType2);
+    char *tokenType3 = analisarToken("1121_12123_12121");
+    printf("%s\n", tokenType3);
+    char *tokenType4 = analisarToken("121ae");
+    printf("%s\n", tokenType4);
     
     return (EXIT_SUCCESS);
 }
