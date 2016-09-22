@@ -6,6 +6,7 @@
 #include "lexico.h"
 #include <stdio.h>
 #include <string.h>
+#include "automato.h"
 
 FILE* arquivo;
 int offsetGeral = 0;
@@ -65,12 +66,11 @@ Token pegaProximoToken() {
             }
         } // fim de tratamento de comentários
         buffer[i] = c;
-        i++;
-        buffer[i] = '\0';
+        buffer[++i] = '\0';
         c = ultimoLido = leCharArq();
     }
     
-    printf("%c %i\t",ultimoLido, ultimoLido);
+//    printf("%c %i\t",ultimoLido, ultimoLido);
     strcpy(toReturn.token, buffer);
 
     return toReturn;
@@ -120,7 +120,11 @@ void abrirArquivo(char* nomeArquivo) {
 //função que pega o proximo token do arquivo. não está pegando os separadores
 
 Token getToken() {
-    return pegaProximoToken();
+    Token token = pegaProximoToken();
+    
+    token.categoria = analisarToken(token.token);
+    
+    return token;
 }
 
 int isSeparador(char c) {

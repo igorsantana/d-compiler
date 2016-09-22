@@ -1,5 +1,5 @@
 pegar o proximo token{
-	ignore espaço;
+	ignore espaco;
 	str "teste";
 }
 

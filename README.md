@@ -1,1 +1,1 @@
-# d-compiler
+# Compilador de linguagem D
