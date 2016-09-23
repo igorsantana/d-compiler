@@ -64,13 +64,36 @@ Token pegaProximoToken() {
                     }
                 }
             }
-        } // fim de tratamento de comentários
+        }// fim de tratamento de comentários
+        else if (c == '"') {
+            do {
+                if (c == '\\') { //tratamento de caracteres de controle
+                    c = leCharArq();
+                    switch (c) {
+                        case 'n':
+                            c = '\n';
+                            break;
+                        case 't':
+                            c = '\t';
+                            break;
+                        case '\\':
+                            c = '\\';
+                            break;
+                            
+                        //default: retornar um erro bem aqui; 
+                    } //fim de tratamento de caracter de controle
+                }
+                buffer[i] = c;
+                buffer[++i] = '\0';
+                c = ultimoLido = leCharArq();
+            }while(c != '"');
+        }
         buffer[i] = c;
         buffer[++i] = '\0';
         c = ultimoLido = leCharArq();
     }
-    
-//    printf("%c %i\t",ultimoLido, ultimoLido);
+
+    //    printf("%c %i\t",ultimoLido, ultimoLido);
     strcpy(toReturn.token, buffer);
 
     return toReturn;
@@ -121,9 +144,9 @@ void abrirArquivo(char* nomeArquivo) {
 
 Token getToken() {
     Token token = pegaProximoToken();
-    
+
     token.categoria = analisarToken(token.token);
-    
+
     return token;
 }
 
