@@ -79,6 +79,9 @@ Token pegaProximoToken() {
                         case '\\':
                             c = '\\';
                             break;
+                        case '"':
+                            c = '"';
+                            break;
                             
                         //default: retornar um erro bem aqui; 
                     } //fim de tratamento de caracter de controle
