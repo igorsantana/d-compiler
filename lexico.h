@@ -18,28 +18,33 @@
 extern "C" {
 #endif
 
-    struct Token {
-        char* palavra;
+    //estruturas
+    struct Token{
+        int categoria;
+        char token[50];
+        int linha;
+        int coluna;
     };
+    
     typedef struct Token Token;
 
     extern void abrirArquivo(char* nome);
 
     extern Token getToken();
-
-    int isPalavraReservada(Token token);
-
-    int isIdentificador(Token token);
-
-    int isSimbulo(Token token);
-
-    int isNumero(Token token);
     
-    int isString(Token token);
-    
-    int pegaProximoToken();
+    Token pegaProximoToken();
     
     char* tipoToken(Token token);
+
+    int isSeparador(char c);
+
+    int isSeparadorUtil(char c);
+    
+    int isCaracterValido(char c);
+    
+    char leCharArq();
+    
+    Token setaLinhaColuna(Token token);
 
 
 

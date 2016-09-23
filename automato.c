@@ -9,7 +9,7 @@
 
 int FLAG = REG_EXTENDED|REG_NOSUB;
 const char IDENTIFICADOR[]    = "^([A-Za-z]{1}[a-zA-Z0-9_]*)$|^([_]{1}[a-zA-Z0-9]+[a-zA-Z0-9_]*)$";
-const char STRING[]           = "^([A-Za-z]{1}[a-zA-Z0-9_]*)$|^([_]{1}[a-zA-Z0-9]+[a-zA-Z0-9_]*)$";
+const char STRING[]           = "^\".*\"[cwd]{0,1}$";
 const char INTEGER[]          = "^[0-9]*[ulUL]?$";
 const char CARACTER[]         = "^'{1}[\\]?.{1}'{1}$";
 const char PONTO_FLUTUANTE[]  = "^[0-9]+\\.[0-9]+$";
