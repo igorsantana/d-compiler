@@ -13,12 +13,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lexico.h"
 
 /*
  * 
  */
 int main(int argc, char** argv) {
+    char nomeArquivo[30];
 //    char *tokenType1 = analisarToken("+");
 //    printf("%s\n", tokenType1);
 //    char *tokenType2 = analisarToken("/");
@@ -35,7 +37,9 @@ int main(int argc, char** argv) {
 //    printf("%s\n", tokenType7);
 //    char *tokenType8 = analisarToken("2321312asddsa");
 //    printf("%s\n", tokenType8);
-    abrirArquivo("teste.d");
+    printf("Arquivo de entrada: ");
+    gets(nomeArquivo);
+    abrirArquivo(nomeArquivo);
     int i;
     Token token;
     for(i = 0;i< 12;i++){
