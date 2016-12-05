@@ -20,7 +20,7 @@ extern "C" {
 
     //estruturas
     struct Token{
-        int categoria;
+        char* categoria;
         char token[50];
         int linha;
         int coluna;

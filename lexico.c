@@ -144,7 +144,6 @@ void abrirArquivo(char* nomeArquivo) {
 
 Token getToken() {
     Token token = pegaProximoToken();
-
     token.categoria = analisarToken(token.token);
 
     return token;
@@ -153,7 +152,7 @@ Token getToken() {
 int isSeparador(char c) {
     int i;
 
-    char arraySeparadores[5];
+    char arraySeparadores[6];
     arraySeparadores[0] = ' ';
     arraySeparadores[1] = ';';
     arraySeparadores[2] = '{';
