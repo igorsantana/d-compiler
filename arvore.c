@@ -81,7 +81,6 @@ int add_son(Tree* root, Token tok_node, Token tok_son){
     return 1;
     
 }
-//strcmp(tok.token, root->token.token)
 
 int add_brother(Tree* root, Token tok_node, Token tok_brother){
     if(root == NULL) return 0;
@@ -106,20 +105,4 @@ void iterate_sons(Tree* root, void (*f)(Tree*, int) ){
     }
 }
 
-//int main(int argc, char** argv) {
-//    Tree* root = create_tree(NULL, 0);
-//    
-//    add_son(root, 0, 1);
-//    add_son(root, 0, 2);
-//    add_son(root, 0, 3);
-//    
-//    
-//    add_son(root, 1, 11);
-//    add_son(root, 1, 12);
-//    add_son(root, 1, 13);
-//        
-//    iterate_sons(root->filhos, &iterate);
-//    
-//
-//}
 
