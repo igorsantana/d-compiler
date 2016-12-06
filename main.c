@@ -18,7 +18,7 @@
 #include "arvore.h"
 
 void iterator(Tree* node, int idx){
-    printf("FILHO: { valor: [%s]\ttipo: [%s] } PAI: { valor: [%s]\ttipo: [%s] }\n", node->token.token, node->token.categoria, node->pai->token.token, node->pai->token.categoria);
+    printf("FILHO: { valor: [%s]\ttipo: [%s] }\n", node->token.token, node->token.categoria, node->pai->token.token, node->pai->token.categoria);
 }
 
 Token first_token(){

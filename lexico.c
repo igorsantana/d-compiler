@@ -171,20 +171,23 @@ int isSeparador(char c) {
 }
 
 int isSeparadorUtil(char c) {
-    int i;
+    int i, ret = 0;
 
-    char arraySeparadoresUteis[5];
+    char arraySeparadoresUteis[7];
     arraySeparadoresUteis[0] = ']';
     arraySeparadoresUteis[1] = '[';
     arraySeparadoresUteis[2] = '{';
     arraySeparadoresUteis[3] = '}';
     arraySeparadoresUteis[4] = ';';
+    arraySeparadoresUteis[5] = '(';
+    arraySeparadoresUteis[6] = ')';
+    
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 6; i++) {
         if (arraySeparadoresUteis[i] == c) {
-            return 1;
+            ret = 11;
             break;
         }
     }
-    return 0;
+    return ret;
 }
