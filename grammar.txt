@@ -1,0 +1,396 @@
+Type:
+    BasicTypeX
+    BasicTypeX BasicType2
+
+BasicTypeX:
+    bool
+    byte
+    ubyte
+    short
+    ushort
+    int
+    uint
+    long
+    ulong
+    char
+    wchar
+    dchar
+    float
+    double
+    real
+    ifloat
+    idouble
+    ireal
+    cfloat
+    cdouble
+    creal
+    void
+
+BasicType2:
+    BasicType2X 
+    BasicType2X BasicType2
+
+BasicType2X:
+    *
+    [ ]
+    [ AssignExpression ]
+    [ AssignExpression .. AssignExpression ]
+
+IdentifierList:
+    id
+    id . IdentifierList
+    id [ AssignExpression ]. IdentifierList
+
+Expression:
+    CommaExpression
+
+CommaExpression:
+    AssignExpression
+    AssignExpression , CommaExpression
+
+AssignExpression:
+    OrOrExpression
+    OrOrExpression = AssignExpression
+    OrOrExpression += AssignExpression
+    OrOrExpression -= AssignExpression
+    OrOrExpression *= AssignExpression
+    OrOrExpression /= AssignExpression
+
+OrOrExpression:
+    AndAndExpression OrOrExpression1
+
+OrOrExpression1:
+    || AndAndExpression OrOrExpression1
+    e
+
+AndAndExpression:
+    CmpExpression AndAndExpression1
+
+AndAndExpression1:
+    && CmpExpression AndAndExpression1
+    e
+
+CmpExpression:
+    AddExpression
+    EqualExpression
+    RelExpression
+
+EqualExpression:
+    AddExpression == AddExpression
+    AddExpression != AddExpression
+
+RelExpression:
+    AddExpression < AddExpression
+    AddExpression <= AddExpression
+    AddExpression > AddExpression
+    AddExpression >= AddExpression
+
+AddExpression:
+    MulExpression AddExpression1
+
+AddExpression1:
+    + MulExpression AddExpression1
+    - MulExpression AddExpression1
+    e
+
+MulExpression:
+    UnaryExpression MulExpression1
+
+MulExpression1:
+    * UnaryExpression MulExpression1
+    / UnaryExpression MulExpression1
+    % UnaryExpression MulExpression1
+    e
+
+UnaryExpression:
+    & UnaryExpression
+    ++ UnaryExpression
+    -- UnaryExpression
+    * UnaryExpression
+    - UnaryExpression
+    + UnaryExpression
+    ! UnaryExpression
+    PostfixExpression
+
+ArgumentList:
+    AssignExpression
+    AssignExpression ,
+    AssignExpression , ArgumentList
+
+PostfixExpression:
+    PrimaryExpression PostfixExpression1
+    IndexExpression PostfixExpression1
+
+PostfixExpression1:
+     . id PostfixExpression1
+     ++ PostfixExpression1
+     -- PostfixExpression1
+     ( ) PostfixExpression1
+     ( ArgumentList ) PostfixExpression1
+     e
+
+IndexExpression:
+    PostfixExpression [ ArgumentList ]
+
+PrimaryExpression:
+    id
+    . id
+    this
+    super
+    null
+    true
+    false
+    $
+    _IntegerLiteral
+    _FloatLiteral
+    _CharacterLiteral
+    _StringLiteral
+    ArrayLiteral
+    ImportExpression
+    ( Expression )
+
+ArrayLiteral:
+    [ ArgumentListopt ]
+
+ImportExpression:
+    import ( AssignExpression )
+
+Statement:
+    ;
+    NonEmptyStatement
+    ScopeBlockStatement
+
+NoScopeNonEmptyStatement:
+    NonEmptyStatement
+    BlockStatement
+
+NoScopeStatement:
+    ;
+    NonEmptyStatement
+    BlockStatement
+
+NonEmptyOrScopeBlockStatement:
+    NonEmptyStatement
+    ScopeBlockStatement
+
+NonEmptyStatement:
+    NonEmptyStatementNoCaseNoDefault
+    CaseStatement
+    DefaultStatement
+
+NonEmptyStatementNoCaseNoDefault:
+    ExpressionStatement
+    DeclarationStatement
+    IfStatement
+    WhileStatement
+    DoStatement
+    ForStatement
+    SwitchStatement
+    BreakStatement
+    ReturnStatement
+    ImportDeclaration
+ScopeStatement:
+    NonEmptyStatement
+    BlockStatement
+ScopeBlockStatement:
+    BlockStatement
+LabeledStatement:
+    id :
+    id : NoScopeStatement
+    id : Statement
+BlockStatement:
+    { }
+    { StatementList }
+
+StatementList:
+    Statement
+    Statement StatementList
+ExpressionStatement:
+    Expression ;
+DeclarationStatement:
+    Declaration
+
+IfStatement:
+    if ( IfCondition ) ThenStatement
+    if ( IfCondition ) ThenStatement else ElseStatement
+IfCondition:
+    Expression
+    BasicTypeX Declarator = Expression
+    BasicType Declarator = Expression
+ThenStatement:
+    ScopeStatement
+ElseStatement:
+    ScopeStatement
+
+WhileStatement:
+    while ( Expression ) ScopeStatement
+
+DoStatement:
+    do ScopeStatement  while ( Expression ) ;
+
+ForStatement:
+    for ( Initialize Test ; Increment ) ScopeStatement
+    for ( Initialize Test ; ) ScopeStatement
+    for ( Initialize  ; Increment ) ScopeStatement
+    for ( Initialize  ; ) ScopeStatement
+Initialize:
+    ;
+    NoScopeNonEmptyStatement
+Test:
+    Expression
+Increment:
+    Expression
+
+SwitchStatement:
+    switch ( Expression ) ScopeStatement
+
+CaseStatement:
+    case ArgumentList : ScopeStatementList
+
+DefaultStatement:
+    default : ScopeStatementList
+
+ScopeStatementList:
+    StatementListNoCaseNoDefault
+
+StatementListNoCaseNoDefault:
+    StatementNoCaseNoDefault
+    StatementNoCaseNoDefault StatementListNoCaseNoDefault
+
+StatementNoCaseNoDefault:
+    ;
+    NonEmptyStatementNoCaseNoDefault
+    ScopeBlockStatement
+
+BreakStatement:
+    break Identifier ;
+ReturnStatement:
+    return Expression ;
+
+Declaration:
+    FuncDeclaration
+    VarDeclarations
+    ImportDeclaration
+
+VarDeclarations:
+    BasicTypeX Declarators ;
+
+Declarators:
+    DeclaratorInitializer
+    DeclaratorInitializer , DeclaratorIdentifierList
+
+DeclaratorInitializer:
+    VarDeclarator
+    VarDeclarator = Initializer
+
+DeclaratorIdentifierList:
+    DeclaratorIdentifier
+    DeclaratorIdentifier , DeclaratorIdentifierList
+
+DeclaratorIdentifier:
+    VarDeclaratorIdentifier
+    AltDeclaratorIdentifier
+
+VarDeclaratorIdentifier:
+    id
+    id = Initializer
+
+AltDeclaratorIdentifier:
+    BasicType2 id 
+    BasicType2 id AltDeclaratorSuffixes
+    BasicType2 id  = Initializer
+    BasicType2 id AltDeclaratorSuffixes = Initializer
+    
+Declarator:
+    VarDeclarator
+    AltDeclarator
+
+VarDeclarator:
+    BasicType2 id
+
+AltDeclarator:
+    BasicType2 id AltDeclaratorSuffixes
+    
+AltDeclaratorSuffixes:
+    AltDeclaratorSuffix
+    AltDeclaratorSuffix AltDeclaratorSuffixes
+
+AltDeclaratorSuffix:
+    [ ]
+    [ AssignExpression ]
+
+Initializer:
+    VoidInitializer
+    NonVoidInitializer
+
+VoidInitializer:
+    void
+
+NonVoidInitializer:
+    ExpInitializer:
+    ArrayInitializer
+
+ExpInitializer:
+    AssignExpression
+
+ArrayInitializer:
+    [ ]
+    [ ArrayMemberInitializations ]
+
+ArrayMemberInitializations:
+    ArrayMemberInitialization
+    ArrayMemberInitialization ,
+    ArrayMemberInitialization , ArrayMemberInitializations
+
+ArrayMemberInitialization:
+    NonVoidInitializer
+
+FuncDeclaration:
+    BasicTypeX FuncDeclarator FunctionBody
+    
+FuncDeclarator:
+    id FuncDeclaratorSuffix
+    BasicType2 id FuncDeclaratorSuffix
+
+FuncDeclaratorSuffix:
+    Parameters
+
+Parameters:
+    ( )
+    ( ParameterList )
+
+ParameterList:
+    Parameter
+    Parameter , ParameterList
+
+Parameter:
+    BasicTypeX Declarator
+    
+FunctionBody:
+    BlockStatement
+    
+ModuleFullyQualifiedName:
+    ModuleName
+    Packages . ModuleName
+
+ModuleName:
+    id
+
+Packages:
+    PackageName Packages1
+
+Packages1:
+    . PackageName Packages1
+    e
+
+PackageName:
+    id
+
+ImportDeclaration:
+    import ImportList ;
+
+ImportList:
+    Import
+
+Import:
+    ModuleFullyQualifiedName
