@@ -61,14 +61,14 @@ OrOrExpression:
 
 OrOrExpression1:
     || AndAndExpression OrOrExpression1
-    e
+    lambda
 
 AndAndExpression:
     CmpExpression AndAndExpression1
 
 AndAndExpression1:
     && CmpExpression AndAndExpression1
-    e
+    lambda
 
 CmpExpression:
     AddExpression
@@ -91,7 +91,7 @@ AddExpression:
 AddExpression1:
     + MulExpression AddExpression1
     - MulExpression AddExpression1
-    e
+    lambda
 
 MulExpression:
     UnaryExpression MulExpression1
@@ -100,7 +100,7 @@ MulExpression1:
     * UnaryExpression MulExpression1
     / UnaryExpression MulExpression1
     % UnaryExpression MulExpression1
-    e
+    lambda
 
 UnaryExpression:
     & UnaryExpression
@@ -127,7 +127,7 @@ PostfixExpression1:
      -- PostfixExpression1
      ( ) PostfixExpression1
      ( ArgumentList ) PostfixExpression1
-     e
+     lambda
 
 IndexExpression:
     PostfixExpression [ ArgumentList ]
@@ -381,7 +381,7 @@ Packages:
 
 Packages1:
     . PackageName Packages1
-    e
+    lambda
 
 PackageName:
     id
