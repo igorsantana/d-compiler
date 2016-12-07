@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   lexico.h
  * Author: rafael
@@ -13,10 +7,6 @@
 
 #ifndef LEXICO_H
 #define LEXICO_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
     //estruturas
     struct Token{
@@ -34,23 +24,11 @@ extern "C" {
     
     Token pegaProximoToken();
     
-    char* tipoToken(Token token);
-
-    int isSeparador(char c);
-
-    int isSeparadorUtil(char c);
+    char le_char_arq();
     
-    int isCaracterValido(char c);
+    void setaLinhaColuna(Token* token);
     
-    char leCharArq();
-    
-    Token setaLinhaColuna(Token token);
-
-
-
-#ifdef __cplusplus
-}
-#endif
+    int verifica_separador(char c);
 
 #endif /* LEXICO_H */
 

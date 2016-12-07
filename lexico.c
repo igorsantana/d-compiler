@@ -1,112 +1,148 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 #include "lexico.h"
 #include <stdio.h>
 #include <string.h>
 #include "automato.h"
 
+#define NAO_SEPARADOR -1
+#define SEPARADOR      0
+#define SEPARADOR_UTIL 1
+
+const struct Token token_vazio;
+
 FILE* arquivo;
+
 int offsetGeral = 0;
 int posicaoLinha = 1;
 int posicaoColuna = 0;
-Token anterior;
-char ultimoLido;
+
+Token token_buf;
+int   retorna_buf = 0;
+int   VAZIO_FLAG = 0;
+
+Token eof_token(){
+    Token eof;
+    eof.coluna = -1;
+    eof.linha = -1;
+    eof.categoria = "EOF";;
+    eof.token[0] = 'E';
+    eof.token[1] = 'O';
+    eof.token[2] = 'F';
+    eof.token[3] = '\0';
+    return eof;
+}
+
+void braga(Token* ret, char* buf, int valor_flag){
+    strcpy(ret->token, buf);
+    memset(&buf[0], 0, sizeof(buf));
+    setaLinhaColuna(ret); 
+    VAZIO_FLAG = valor_flag;
+}
+
+int verifica_composicao(char a, char b){
+    printf("A: %c, B: %c\n", a, b);
+    int i;
+    if(b == '='){
+        char possiveis[8] = {'+','-','*','/','>','<','!','='};
+        for(i = 0; i < 8; i++){
+            if(a == possiveis[i])
+                return 1;
+        }
+        return 0;
+    }
+    if((a == '&' && b == '&') ||( a == '|' && b == '|')
+    || (a == '+' && b == '+') || (a == '-' && b == '-')
+    || (a == '*' && b == '*')){
+        return 1;
+    }
+    return 0;
+}
 
 Token pegaProximoToken() {
-    char c;
-    char buffer [50];
-    int i = 0; //incrementador do buffer
-    struct Token toReturn;
-    buffer[0] = '\0';
-
-    do {
-        c = ultimoLido;
-        if (ultimoLido && isCaracterValido(c)) {
-            buffer[0] = c;
-            buffer[1] = '\0';
-            i = 1;
-        } else {
-            c = ultimoLido = leCharArq();
-        }
-    } while (!isCaracterValido(c));
-
-    toReturn = setaLinhaColuna(toReturn);
-    if (isSeparador(c)) {
-        buffer[0] = c;
-        buffer[1] = '\0';
-        i = 1;
-        ultimoLido = leCharArq();
+    if(retorna_buf == 1){
+        retorna_buf = 0;
+        return token_buf;
     }
-    //                printf("\n %c %i ----",c,isSeparador(c));
-    while (isSeparador(c) != 1 && c != EOF) {
-
-        if (c == '/') { // tratamentos de comentários
-            c = leCharArq();
-            if (c == '/') { // comentários em mesma linha
-                while (c != 13 && c != EOF) {
-                    c = leCharArq();
-                }
-            } else if (c == '*') { //comentários entre /**/
-                c = leCharArq();
-
-                while (c != EOF) {
-                    c = leCharArq();
-
-                    if (c == '*') {
-                        c = leCharArq();
-
-                        if (c == '/') {
+    
+    Token to_return;
+    token_buf.token[0] = '\0'; //????
+    token_buf = token_vazio;
+    
+    char buf [50];
+    int  buf_inc = 0; //incrementador do buf
+     
+    char c = le_char_arq();
+    
+    while(1){
+        if(c == '/'){
+            c = le_char_arq();
+            if(c == '*'){
+                while(c != EOF){
+                    c = le_char_arq();
+                    if(c == '*'){
+                        c = le_char_arq();
+                        if(c == '/'){
+                            c = le_char_arq();
                             break;
                         }
                     }
                 }
-            }
-        }// fim de tratamento de comentários
-        else if (c == '"') {
-            do {
-                if (c == '\\') { //tratamento de caracteres de controle
-                    c = leCharArq();
-                    switch (c) {
-                        case 'n':
-                            c = '\n';
-                            break;
-                        case 't':
-                            c = '\t';
-                            break;
-                        case '\\':
-                            c = '\\';
-                            break;
-                            
-                        //default: retornar um erro bem aqui; 
-                    } //fim de tratamento de caracter de controle
+                
+            } else if( c == '/'){
+                c = le_char_arq();
+                while(c != '\n'){
+                    c = le_char_arq();
                 }
-                buffer[i] = c;
-                buffer[++i] = '\0';
-                c = ultimoLido = leCharArq();
-            }while(c != '"');
+            }
         }
-        buffer[i] = c;
-        buffer[++i] = '\0';
-        c = ultimoLido = leCharArq();
+
+        int tipo_sep = verifica_separador(c);
+        
+        if(tipo_sep == NAO_SEPARADOR){
+            buf[buf_inc] = c;
+            buf_inc++;
+            VAZIO_FLAG = 0;
+        } 
+        else if(tipo_sep == SEPARADOR && VAZIO_FLAG == 0){
+            buf[buf_inc] = '\0';   
+            braga(&to_return, buf, 1);
+            buf_inc = 0;
+            return to_return;
+        } 
+        else if(tipo_sep == SEPARADOR_UTIL && VAZIO_FLAG == 0) {
+            buf[buf_inc] = '\0';   
+            braga(&to_return, buf, 1);
+            buf_inc = 0;
+            char buf_aux[2] = { c, '\0'};
+            braga(&token_buf, buf_aux, 1);
+            retorna_buf = 1;
+            return to_return;
+        } 
+        else if(tipo_sep == SEPARADOR_UTIL && VAZIO_FLAG == 1){
+            char next = le_char_arq();
+            int sep_next = verifica_separador(next);
+            if(sep_next == SEPARADOR_UTIL && verifica_composicao(c, next)){
+                printf("Pegou composição AQUI: %c%c",c,next);
+            }
+            buf[0] = c; buf[1] = '\0';
+            braga(&to_return, buf, 1);
+            buf_inc = 0;
+            return to_return;
+        }
+        c = le_char_arq();
+        if(c == EOF){
+            break;
+        }
     }
-
-    //    printf("%c %i\t",ultimoLido, ultimoLido);
-    strcpy(toReturn.token, buffer);
-
-    return toReturn;
+    
+    return eof_token();
 }
 
-Token setaLinhaColuna(Token token) {
-    token.coluna = posicaoColuna;
-    token.linha = posicaoLinha;
-
-    return token;
+void setaLinhaColuna(Token* token) {
+    token->coluna = posicaoColuna;
+    token->linha = posicaoLinha;
 }
 
-char leCharArq() {
+char le_char_arq() {
     offsetGeral++;
     posicaoColuna++;
     char c = fgetc(arquivo);
@@ -120,19 +156,8 @@ char leCharArq() {
             offsetGeral += 3;
             break;
     }
-
     return c;
 }
-
-int isCaracterValido(char c) {
-    return c != '\n' && c != ' ' && c != '\t';
-}
-
-char* tipoToken(Token token) {
-    return "";
-}
-
-//função para abertura de arquivo
 
 void abrirArquivo(char* nomeArquivo) {
     if ((arquivo = fopen(nomeArquivo, "r")) == NULL) {
@@ -140,54 +165,26 @@ void abrirArquivo(char* nomeArquivo) {
     }
 }
 
-//função que pega o proximo token do arquivo. não está pegando os separadores
-
 Token getToken() {
     Token token = pegaProximoToken();
+    printf("TOKEN: __ %s __ \n",token.token);
     token.categoria = analisarToken(token.token);
-
     return token;
 }
 
-int isSeparador(char c) {
+int verifica_separador(char c){
+    char separadores[4] = {' ', '\t', '\n', ';'};
+    char separadores_uteis[15] = {'{','}','[',']','(',')', '-', '+', '*', '/', '=', ',', '<', '>'};
     int i;
-
-    char arraySeparadores[6];
-    arraySeparadores[0] = ' ';
-    arraySeparadores[1] = ';';
-    arraySeparadores[2] = '{';
-    arraySeparadores[3] = '}';
-    arraySeparadores[4] = '\t';
-    arraySeparadores[5] = '\n';
-
-    for (i = 0; i < 5; i++) {
-        if (arraySeparadores[i] == c) {
-            return 1;
-            break;
+    for(i = 0; i < 4; i++){
+        if(separadores[i] == c){
+            return SEPARADOR;
         }
     }
-
-    return 0;
-}
-
-int isSeparadorUtil(char c) {
-    int i, ret = 0;
-
-    char arraySeparadoresUteis[7];
-    arraySeparadoresUteis[0] = ']';
-    arraySeparadoresUteis[1] = '[';
-    arraySeparadoresUteis[2] = '{';
-    arraySeparadoresUteis[3] = '}';
-    arraySeparadoresUteis[4] = ';';
-    arraySeparadoresUteis[5] = '(';
-    arraySeparadoresUteis[6] = ')';
-    
-
-    for (i = 0; i < 6; i++) {
-        if (arraySeparadoresUteis[i] == c) {
-            ret = 11;
-            break;
+    for(i = 0; i < 15; i++){
+        if(separadores_uteis[i] == c) {
+            return SEPARADOR_UTIL;
         }
     }
-    return ret;
+    return NAO_SEPARADOR;
 }

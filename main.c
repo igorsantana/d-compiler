@@ -39,16 +39,13 @@ int main(int argc, char** argv) {
     abrirArquivo(nomeArquivo);
     int i;
     
-    Tree* root = create_tree(NULL, first_token());
-    
-    for(i = 0;i< 12;i++){
-        Token token = getToken();
-        
-        add_son(root, root->token, token);
-        
+
+    Token token = getToken();
+    while(token.coluna != -1 && token.linha != -1){
+        token = getToken();
     }
     
-    iterate_sons(root, &iterator);
+
     return (EXIT_SUCCESS);
 }
     
