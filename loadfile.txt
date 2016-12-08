@@ -1,0 +1,39 @@
++
+-
+*
+/
+(
+)
+number
+void
+$
+
+Sis
+Easy
+Word
+Tool
+Xor
+Face
+
++ Word + Tool Word
++ Xor lambda
+- Word - Tool Word
+- Xor lambda
+* Xor * Face Xor
+/ Xor / Face Xor
+( Sis Easy
+( Easy Tool Word
+( Tool Face Xor
+( Face ( Easy )
+) Word lambda
+) Xor lambda
+number Sis Easy
+number Easy Tool Word
+number Tool Face Xor
+number Face number
+void Sis Easy
+void Easy Tool Word
+void Tool Face Xor
+void Face void
+$ Word lambda
+$ Xor lambda
