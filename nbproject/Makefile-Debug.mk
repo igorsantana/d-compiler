@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/automato.o \
 	${OBJECTDIR}/lexico.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/sintatico.o \
 	${OBJECTDIR}/tabelaPreditiva.o
 
 
@@ -79,6 +80,11 @@ ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/sintatico.o: sintatico.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sintatico.o sintatico.c
 
 ${OBJECTDIR}/tabelaPreditiva.o: tabelaPreditiva.c
 	${MKDIR} -p ${OBJECTDIR}

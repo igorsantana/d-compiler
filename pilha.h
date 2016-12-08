@@ -13,6 +13,9 @@
 
 #ifndef PILHA_H
 
+#include "tabelaPreditiva.h"
+
+
 #define PILHA_H
 
 
@@ -20,7 +23,7 @@ typedef struct Elemento Elemento;
 typedef struct Pilha Pilha;
 
 struct Elemento {
-    Token token;
+    caracter caracter;
     Elemento *abaixo;
     Elemento *acima;
 };
@@ -28,9 +31,9 @@ struct Elemento {
 struct Pilha {
     Elemento *topo;
 };
-void        empilha(Pilha* pilha, Token token); 
+void        empilha(Pilha* pilha, caracter caracter); 
 Elemento*   desempilha(Pilha* pilha);
-Pilha       inicializa_pilha(Token t);
+Pilha       inicializa_pilha(caracter t);
 
 
 
