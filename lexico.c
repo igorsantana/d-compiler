@@ -8,16 +8,25 @@
 #define SEPARADOR_UTIL 1
 
 const struct Token token_vazio;
-
+Token token_buf;
 FILE* arquivo;
-
 int offsetGeral = 0;
 int posicaoLinha = 1;
 int posicaoColuna = 0;
-
-Token token_buf;
 int   retorna_buf = 0;
 int   VAZIO_FLAG = 0;
+char caracter_buf = '#';
+
+int     verifica_composicao(char a, char b);
+Token   eof_token();
+void    atualiza_token(Token* ret, char* buf, int valor_flag);
+void    trata_composicao(char c, char* buf);
+Token   pegaProximoToken();
+void    setaLinhaColuna(Token* token);
+char    le_char_arq();
+void    abrirArquivo(char* nomeArquivo);
+Token   getToken();
+int     verifica_separador(char c);
 
 Token eof_token(){
     Token eof;
@@ -31,15 +40,26 @@ Token eof_token(){
     return eof;
 }
 
-void braga(Token* ret, char* buf, int valor_flag){
+void atualiza_token(Token* ret, char* buf, int valor_flag){
     strcpy(ret->token, buf);
     memset(&buf[0], 0, sizeof(buf));
     setaLinhaColuna(ret); 
     VAZIO_FLAG = valor_flag;
 }
 
+void trata_composicao(char c, char* buf){
+    char next = le_char_arq();
+    int sep_next = verifica_separador(next);
+            
+    if(sep_next == SEPARADOR_UTIL && verifica_composicao(c, next)){
+        buf[0] = c; buf[1] = next; buf[2] = '\0';
+    } else {
+        buf[0] = c; buf[1] = '\0';
+        caracter_buf = next;
+    }
+}
+
 int verifica_composicao(char a, char b){
-    printf("A: %c, B: %c\n", a, b);
     int i;
     if(b == '='){
         char possiveis[8] = {'+','-','*','/','>','<','!','='};
@@ -69,8 +89,13 @@ Token pegaProximoToken() {
     
     char buf [50];
     int  buf_inc = 0; //incrementador do buf
-     
-    char c = le_char_arq();
+    char c;
+    if(caracter_buf == '#'){
+        c = le_char_arq();
+    } else {
+        c = caracter_buf;
+        caracter_buf = '#';
+    }
     
     while(1){
         if(c == '/'){
@@ -104,27 +129,25 @@ Token pegaProximoToken() {
         } 
         else if(tipo_sep == SEPARADOR && VAZIO_FLAG == 0){
             buf[buf_inc] = '\0';   
-            braga(&to_return, buf, 1);
+            atualiza_token(&to_return, buf, 1);
             buf_inc = 0;
             return to_return;
         } 
         else if(tipo_sep == SEPARADOR_UTIL && VAZIO_FLAG == 0) {
             buf[buf_inc] = '\0';   
-            braga(&to_return, buf, 1);
+            atualiza_token(&to_return, buf, 1);
             buf_inc = 0;
-            char buf_aux[2] = { c, '\0'};
-            braga(&token_buf, buf_aux, 1);
+            
+            char buf_aux[3];
+            trata_composicao(c, buf_aux);
+            atualiza_token(&token_buf, buf_aux, 1);
             retorna_buf = 1;
             return to_return;
         } 
         else if(tipo_sep == SEPARADOR_UTIL && VAZIO_FLAG == 1){
-            char next = le_char_arq();
-            int sep_next = verifica_separador(next);
-            if(sep_next == SEPARADOR_UTIL && verifica_composicao(c, next)){
-                printf("Pegou composição AQUI: %c%c",c,next);
-            }
-            buf[0] = c; buf[1] = '\0';
-            braga(&to_return, buf, 1);
+            trata_composicao(c, buf);
+            
+            atualiza_token(&to_return, buf, 1);
             buf_inc = 0;
             return to_return;
         }
@@ -167,7 +190,7 @@ void abrirArquivo(char* nomeArquivo) {
 
 Token getToken() {
     Token token = pegaProximoToken();
-    printf("TOKEN: __ %s __ \n",token.token);
+    printf("TOKEN: %s  \n",token.token);
     token.categoria = analisarToken(token.token);
     return token;
 }

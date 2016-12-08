@@ -22,13 +22,6 @@
 
     extern Token getToken();
     
-    Token pegaProximoToken();
-    
-    char le_char_arq();
-    
-    void setaLinhaColuna(Token* token);
-    
-    int verifica_separador(char c);
 
 #endif /* LEXICO_H */
 
