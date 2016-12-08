@@ -1,7 +1,6 @@
-void bubbleSort(int[] ssarr) {
+void bubbleSort(int[] arr) {
 
-    bool changed = false;
-
+    bool 1changed = false;
     do {
         changed = false;
         int i;

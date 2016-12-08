@@ -183,6 +183,7 @@ char le_char_arq() {
 }
 
 void abrirArquivo(char* nomeArquivo) {
+    
     if ((arquivo = fopen(nomeArquivo, "r")) == NULL) {
         printf("Arquivo não encontrado!");
     }
@@ -190,21 +191,21 @@ void abrirArquivo(char* nomeArquivo) {
 
 Token getToken() {
     Token token = pegaProximoToken();
-    printf("TOKEN: %s  \n",token.token);
+    
     token.categoria = analisarToken(token.token);
     return token;
 }
 
 int verifica_separador(char c){
-    char separadores[4] = {' ', '\t', '\n', ';'};
-    char separadores_uteis[15] = {'{','}','[',']','(',')', '-', '+', '*', '/', '=', ',', '<', '>'};
+    char separadores[5] = {' ', '\t', '\n','\r', ';'};
+    char separadores_uteis[16] = {'{','}','[',']','(',')', '-', '+', '*', '/', '=', ',', '<', '>', '.'};
     int i;
-    for(i = 0; i < 4; i++){
+    for(i = 0; i < 5; i++){
         if(separadores[i] == c){
             return SEPARADOR;
         }
     }
-    for(i = 0; i < 15; i++){
+    for(i = 0; i < 16; i++){
         if(separadores_uteis[i] == c) {
             return SEPARADOR_UTIL;
         }
