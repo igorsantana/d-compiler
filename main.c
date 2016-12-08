@@ -5,6 +5,7 @@
 #include "lexico.h"
 #include "arvore.h"
 #include "pilha.h"
+#include "tabelaPreditiva.h"
 
 Token first_token(){
     Token token;
