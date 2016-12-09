@@ -1,4 +1,3 @@
-#include "automato.h"
 #include <string.h>
 #include <stdio.h>
 #include <regex.h>
@@ -13,7 +12,6 @@ const char STRING[]           = "^\".*\"[cwd]{0,1}$";
 const char INTEGER[]          = "^[0-9]*[ulUL]?$";
 const char CARACTER[]         = "^'{1}[\\]?.{1}'{1}$";
 const char PONTO_FLUTUANTE[]  = "^[0-9]+\\.[0-9]+$";
-//const char PALAVRAS_RESERVADAS_COMPILADOR[] = "^__DATE__$|^__EOF__$|^__FILE__$|^__FILE_FULL_PATH__$|^__FUNCTION__$|^__gshared$|^__MODULE__$|^__LINE__$|^__parameters$|^__PRETTY_FUNCTION__$|^__TIME__$|^__TIMESTAMP__$|^__traits$|^__vector$|^__VENDOR__$|^__VERSION__$";
 const char SIMBOLOS[]         = "(^-$|^\\|$|^&){2}$|^>{1,3}=?$|^<>=?$|^<{1,2}=?$|^\\^{1,2}=?$|^=>$|^==$|^\\.{1,3}$|^!(<>$|^<$|^>)?=?$|^(%$|^\\*$|^~$|^\\+{1,2}$|^\\$|^$|^\\-$|^&$|^\\/)=?$|^(\\($|^\\)$|^\\[$|^\\]$|^\\{$|^\\}$|^\\?$|^,$|^;$|^:$|^\\$$|^=$|^@$|^#$)";
 const char* PALAVRAS_RESERVADAS[102] = {"abstract", "alias", "align", "asm", "assert", "auto",
                                         "body", "bool", "break", "byte",
@@ -33,6 +31,17 @@ const char* PALAVRAS_RESERVADAS[102] = {"abstract", "alias", "align", "asm", "as
                                         "ubyte", "ucent", "uint", "ulong", "union", "unittest", "ushort", 
                                         "version", "void", "volatile", "wchar", "while", "with"};
 
+/* Funções Externas */
+
+char* analisarToken(char* string);
+
+/* Funções Internas */
+
+int busca_binaria(char *chave);
+int exec_reg(regex_t regex, char string[]);
+
+/* Implementações*/
+
 int busca_binaria(char *chave) {
     int inicio = 0;
     int fim    = TAMANHO - 1;
@@ -50,17 +59,13 @@ int busca_binaria(char *chave) {
     }
     return -1;
 }
-
 int exec_reg(regex_t regex, char string[]){
     return regexec(&regex, string, 0, (regmatch_t *)NULL, 0) == 0;
 }
-
 char* analisarToken(char* string) {
     regex_t regExpIdentificador, regExpString, regExpInteger,
-            regExpCaracter, regExpPontoFlutuante, regExpPalavrasResComp,
-            regExpSimbolos;
-//    
-//    regcomp(&regExpPalavrasResComp,PALAVRAS_RESERVADAS_COMPILADOR, FLAG);
+            regExpCaracter, regExpPontoFlutuante, regExpSimbolos;
+
     regcomp(&regExpIdentificador,IDENTIFICADOR, FLAG);
     regcomp(&regExpString,STRING, FLAG);
     regcomp(&regExpInteger,INTEGER, FLAG);
@@ -69,7 +74,6 @@ char* analisarToken(char* string) {
     regcomp(&regExpSimbolos,SIMBOLOS, FLAG);
     
     if (busca_binaria(string) > 0)               return "PALAVRA_RESERVADA";
-//    if (exec_reg(regExpPalavrasResComp, string)) return "PALAVRA_RESERVADA";
     if (exec_reg(regExpSimbolos, string))        return "SIMBOLO";
     if (exec_reg(regExpIdentificador, string))   return "IDENTIFICADOR";
     if (exec_reg(regExpString, string))          return "STRING";

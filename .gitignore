@@ -2,3 +2,5 @@
 /dist/
 .dep.inc
 /nbproject/
+/compilador-d/build/
+/compilador-d/dist/

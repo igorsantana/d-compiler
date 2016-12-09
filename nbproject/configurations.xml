@@ -5,9 +5,9 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>automato.h</itemPath>
+      <itemPath>estruturas.h</itemPath>
       <itemPath>lexico.h</itemPath>
-      <itemPath>sintatico.h</itemPath>
-      <itemPath>tabelaPreditiva.h</itemPath>
+      <itemPath>tabelapreditiva.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -16,11 +16,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>automato.c</itemPath>
-      <itemPath>lexico.c</itemPath>
+      <logicalFolder name="f1" displayName="analise" projectFiles="true">
+        <itemPath>automato.c</itemPath>
+        <itemPath>lexico.c</itemPath>
+        <itemPath>tabelapreditiva.c</itemPath>
+      </logicalFolder>
+      <itemPath>estruturas.c</itemPath>
       <itemPath>main.c</itemPath>
-      <itemPath>sintatico.c</itemPath>
-      <itemPath>tabelaPreditiva.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -33,6 +35,7 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>ee.d</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -43,24 +46,43 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <standard>3</standard>
+        </cTool>
+        <linkerTool>
+          <linkerDynSerch>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+          </linkerDynSerch>
+        </linkerTool>
       </compileType>
       <item path="automato.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="automato.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ee.d" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="estruturas.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="estruturas.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles">
+        <linkerTool>
+          <linkerDynSerch>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+          </linkerDynSerch>
+        </linkerTool>
+      </folder>
       <item path="lexico.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="lexico.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="sintatico.c" ex="false" tool="0" flavor2="0">
+      <item path="tabelapreditiva.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="sintatico.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tabelaPreditiva.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="tabelaPreditiva.h" ex="false" tool="3" flavor2="0">
+      <item path="tabelapreditiva.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -72,6 +94,7 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <standard>3</standard>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -82,24 +105,40 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <linkerDynSerch>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+          </linkerDynSerch>
+        </linkerTool>
       </compileType>
       <item path="automato.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="automato.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ee.d" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="estruturas.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="estruturas.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles">
+        <linkerTool>
+          <linkerDynSerch>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+          </linkerDynSerch>
+        </linkerTool>
+      </folder>
       <item path="lexico.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="lexico.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="sintatico.c" ex="false" tool="0" flavor2="0">
+      <item path="tabelapreditiva.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="sintatico.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tabelaPreditiva.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="tabelaPreditiva.h" ex="false" tool="3" flavor2="0">
+      <item path="tabelapreditiva.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

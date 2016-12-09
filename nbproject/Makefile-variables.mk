@@ -7,21 +7,21 @@ CND_BASEDIR=`pwd`
 CND_BUILDDIR=build
 CND_DISTDIR=dist
 # Debug configuration
-CND_PLATFORM_Debug=GNU-Linux
-CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux
-CND_ARTIFACT_NAME_Debug=d-compiler
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/d-compiler
-CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
-CND_PACKAGE_NAME_Debug=d-compiler.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/d-compiler.tar
+CND_PLATFORM_Debug=GNU-MacOSX
+CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-MacOSX
+CND_ARTIFACT_NAME_Debug=compilador-d
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/compilador-d
+CND_PACKAGE_DIR_Debug=dist/Debug/GNU-MacOSX/package
+CND_PACKAGE_NAME_Debug=compilador-d.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/compilador-d.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-MacOSX
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-MacOSX
-CND_ARTIFACT_NAME_Release=d-compiler
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/d-compiler
+CND_ARTIFACT_NAME_Release=compilador-d
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/compilador-d
 CND_PACKAGE_DIR_Release=dist/Release/GNU-MacOSX/package
-CND_PACKAGE_NAME_Release=d-compiler.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/d-compiler.tar
+CND_PACKAGE_NAME_Release=compilador-d.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/compilador-d.tar
 #
 # include compiler specific variables
 #
