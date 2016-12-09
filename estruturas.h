@@ -25,6 +25,14 @@ Pilha       inicializa_pilha(char * t);
 Elemento*   desempilha(Pilha* pilha);
 void        empilha(Pilha* pilha, char * elemento);
     
+/* Funções relacionadas a árvore */
+
+Tree*   create_tree (Tree * pai, Token tok);
+Tree*   find_node   (Tree* root, Token tok );
+int     add_son     (Tree* root, Token tok_node, Token tok_son);
+int     add_brother (Tree* root, Token tok_node, Token tok_son);
+void    iterate_sons(Tree* root, void (*f)(Tree*, int) );
+
 #ifdef __cplusplus
 }
 #endif

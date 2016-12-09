@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=compilador-d
+PROJECTNAME=d-compiler
 
 # Active Configuration
 DEFAULTCONF=Debug
