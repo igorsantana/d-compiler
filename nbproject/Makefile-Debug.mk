@@ -21,8 +21,8 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-MacOSX
-CND_DLIB_EXT=dylib
+CND_PLATFORM=GNU-Linux
+CND_DLIB_EXT=so
 CND_CONF=Debug
 CND_DISTDIR=dist
 CND_BUILDDIR=build
@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/estruturas.o \
 	${OBJECTDIR}/lexico.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/sintatico.o \
 	${OBJECTDIR}/tabelapreditiva.o
 
 
@@ -56,7 +57,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-Wl,-rpath,'.' -Wl,-rpath,'.'
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -85,6 +86,11 @@ ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/sintatico.o: sintatico.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sintatico.o sintatico.c
 
 ${OBJECTDIR}/tabelapreditiva.o: tabelapreditiva.c
 	${MKDIR} -p ${OBJECTDIR}
