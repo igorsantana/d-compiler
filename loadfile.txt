@@ -8,7 +8,7 @@ number
 void
 $
 
-Sis
+Start
 Easy
 Word
 Tool
@@ -21,17 +21,17 @@ Face
 - Xor lambda
 * Xor * Face Xor
 / Xor / Face Xor
-( Sis Easy
+( Start Easy
 ( Easy Tool Word
 ( Tool Face Xor
 ( Face ( Easy )
 ) Word lambda
 ) Xor lambda
-number Sis Easy
+number Start Easy
 number Easy Tool Word
 number Tool Face Xor
 number Face number
-void Sis Easy
+void Start Easy
 void Easy Tool Word
 void Tool Face Xor
 void Face void

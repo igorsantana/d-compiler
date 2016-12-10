@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "estruturas.h"
 #include "lexico.h"
+#include "sintatico.h"
 
 int main(int argc, char** argv) {
     
@@ -11,8 +12,15 @@ int main(int argc, char** argv) {
         printf("Arquivo não encontrado!");
     }
     arquivo_leitura(arquivo);
-    Token x = getToken();
-    printf("Token: %s do tipo %s", x.token, x.categoria);
+//    Token x;
+//    do{
+//        x = getToken();
+//        printf("%s ", x.token, x.categoria);
+//    } while (x.linha != -1);
+
+        preditivoDescendente();
+    
+    
     return (EXIT_SUCCESS);
 }
 

@@ -57,7 +57,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-Wl,-rpath,'.' -Wl,-rpath,'.'
+LDLIBSOPTIONS=-Wl,-rpath,. -Wl,-rpath,.
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -67,32 +67,32 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/d-compiler: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/d-compiler ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/automato.o: automato.c
+${OBJECTDIR}/automato.o: automato.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/automato.o automato.c
 
-${OBJECTDIR}/estruturas.o: estruturas.c
+${OBJECTDIR}/estruturas.o: estruturas.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/estruturas.o estruturas.c
 
-${OBJECTDIR}/lexico.o: lexico.c
+${OBJECTDIR}/lexico.o: lexico.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lexico.o lexico.c
 
-${OBJECTDIR}/main.o: main.c
+${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
-${OBJECTDIR}/sintatico.o: sintatico.c
+${OBJECTDIR}/sintatico.o: sintatico.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sintatico.o sintatico.c
 
-${OBJECTDIR}/tabelapreditiva.o: tabelapreditiva.c
+${OBJECTDIR}/tabelapreditiva.o: tabelapreditiva.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tabelapreditiva.o tabelapreditiva.c
@@ -103,6 +103,7 @@ ${OBJECTDIR}/tabelapreditiva.o: tabelapreditiva.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/d-compiler
 
 # Subprojects
 .clean-subprojects:

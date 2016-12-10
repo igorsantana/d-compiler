@@ -10,7 +10,7 @@
 Token token_vazio;
 Token token_buf;
 
-FILE* arquivo;
+FILE* arquivo_lexico;
 
 int offsetGeral = 0;
 int posicaoLinha = 1;
@@ -47,7 +47,7 @@ Token getToken() {
 }
 
 void arquivo_leitura(FILE* arq) {
-    arquivo = arq;
+    arquivo_lexico = arq;
 }
 
 /* Implementação das funções internas */
@@ -111,7 +111,7 @@ void setaLinhaColuna(Token* token) {
 char le_char_arq() {
     offsetGeral++;
     posicaoColuna++;
-    char c = fgetc(arquivo);
+    char c = fgetc(arquivo_lexico);
     switch (c) {
         case '\n':
             posicaoColuna = 0;
@@ -129,11 +129,9 @@ Token eof_token(){
     Token eof;
     eof.coluna = -1;
     eof.linha = -1;
-    eof.categoria = "EOF";;
-    eof.token[0] = 'E';
-    eof.token[1] = 'O';
-    eof.token[2] = 'F';
-    eof.token[3] = '\0';
+    eof.categoria = "$";
+    eof.token[0] = '$';
+    eof.token[1] = '\0';
     return eof;
 }
 Token pegaProximoToken() {
@@ -186,13 +184,13 @@ Token pegaProximoToken() {
             buf_inc++;
             
             if(c == '\"'){
-                c = fgetc(arquivo);
+                c = fgetc(arquivo_lexico);
                 buf[buf_inc] = c;
                 buf_inc++;
                 offsetGeral++;
                 posicaoColuna++;
                 while(c!= '\"'){
-                    c = fgetc(arquivo);
+                    c = fgetc(arquivo_lexico);
                     buf[buf_inc] = c;
                     buf_inc++;
                     offsetGeral++;

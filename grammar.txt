@@ -1,3 +1,6 @@
+Start:
+    Expression
+
 Type:
     BasicTypeX
     BasicTypeX BasicType2

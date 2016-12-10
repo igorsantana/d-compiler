@@ -7,7 +7,7 @@
 #define TAM_MAX_CONJUNTO 100
 
 
-FILE *      arquivo;
+FILE *      arquivo_preditivo;
 Caracter    conjuntoT[TAM_MAX_CONJUNTO];
 Caracter    conjuntoNT[TAM_MAX_CONJUNTO];
 Producao    matrizPreditiva[TAM_MAX_CONJUNTO][TAM_MAX_CONJUNTO];
@@ -26,7 +26,7 @@ void carregaTabela() {
     leituraDosConjuntos();
 }
 void abrirArquivoTabelaPreditiva() {
-    if ((arquivo = fopen("loadfile.txt", "r")) == NULL) {
+    if ((arquivo_preditivo = fopen("loadfile.txt", "r")) == NULL) {
         printf("Falha na abertura do arquivo");
     }
 }
@@ -38,7 +38,7 @@ void leituraDosConjuntos() {
     indexNT = 0;
 
 
-    while (fgets(conjuntoT[indexT].c, sizeof (conjuntoT[indexT].c), arquivo)) {
+    while (fgets(conjuntoT[indexT].c, sizeof (conjuntoT[indexT].c), arquivo_preditivo)) {
         if (strcmp(conjuntoT[indexT].c, "\n") == 0) {
             break;
         }
@@ -52,7 +52,7 @@ void leituraDosConjuntos() {
         indexT++;
     }
 
-    while (fgets(conjuntoNT[indexNT].c, sizeof (conjuntoNT[indexNT].c), arquivo)) {
+    while (fgets(conjuntoNT[indexNT].c, sizeof (conjuntoNT[indexNT].c), arquivo_preditivo)) {
         if (strcmp(conjuntoNT[indexNT].c, "\n") == 0) {
             break;
         }
@@ -65,8 +65,9 @@ void leituraDosConjuntos() {
 
         indexNT++;
     }
-
-    while (fscanf(arquivo, "%s %s %[^\n]s\n", &str1, &str2, &str3) != EOF) {
+    
+//    printf("T - %i NT - %i", indexT,indexNT);
+    while (fscanf(arquivo_preditivo, "%s %s %[^\n]s\n", &str1, &str2, &str3) != EOF) {
         int i = 0;
         while (i <= strlen(str3)) {
             if (str3[i] != ' ' && str3[i] != '\0') {
@@ -76,6 +77,7 @@ void leituraDosConjuntos() {
             } else {
                 linha = retornaIndiceNT(str2);
                 coluna = retornaIndiceT(str1);
+                
                 strcpy(matrizPreditiva[linha][coluna].caracteres[matrizPreditiva[linha][coluna].indexCaracter].c,
                         bufferAux);
                 matrizPreditiva[linha][coluna].indexCaracter++;
@@ -84,6 +86,11 @@ void leituraDosConjuntos() {
             }
             i++;
         }
+//        printf("[%s,%i]-[%s,%i]-",str2,linha,str1,coluna);
+//        for(int h = 0; h < matrizPreditiva[linha][coluna].indexCaracter;h++){
+//            printf("%i / %s #",h,matrizPreditiva[linha][coluna].caracteres[h].c);
+//        }
+//        printf("\n\n");
     }
 }
 
@@ -106,25 +113,25 @@ int retornaIndiceT(char * str) {
 
 
 
-//void printaMatrizPreditiva() {
-//    for (int j = 0; j < indexT; j++) {
-//        printf("%s \t|", conjuntoT[j].c);
-//    }
-//    printf("\n");
-//    for (int i = 0; i < indexNT; i++) {
-//        printf("%s \t|", conjuntoNT[i].c);
-//        for (int j = 0; j < indexT; j++) {
-//            if (matrizPreditiva[i][j].indexCaracter > 0) {
-//                printf("%s->", conjuntoNT[i].c);
-//                for (int k = 0; k < matrizPreditiva[i][j].indexCaracter; k++) {
-//                    printf("%s ", matrizPreditiva[i][j].caracteres[k].c);
-//                }
-//                printf("\n");
-//            } else {
-//                printf("\t");
-//            }
-//            printf("\t|");
-//        }
-//        printf("\n");
-//    }
-//}
+void printaMatrizPreditiva() {
+    for (int j = 0; j < indexT; j++) {
+        printf("%s \t|", conjuntoT[j].c);
+    }
+    printf("\n");
+    for (int i = 0; i < indexNT; i++) {
+        printf("%s \t|", conjuntoNT[i].c);
+        for (int j = 0; j < indexT; j++) {
+            if (matrizPreditiva[i][j].indexCaracter > 0) {
+                printf("%s->", conjuntoNT[i].c);
+                for (int k = 0; k < matrizPreditiva[i][j].indexCaracter; k++) {
+                    printf("%s ", matrizPreditiva[i][j].caracteres[k].c);
+                }
+                printf("\n");
+            } else {
+                printf("\t");
+            }
+            printf("\t|");
+        }
+        printf("\n");
+    }
+}

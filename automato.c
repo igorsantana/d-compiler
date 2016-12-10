@@ -75,9 +75,9 @@ char* analisarToken(char* string) {
     
     if (busca_binaria(string) > 0)               return "PALAVRA_RESERVADA";
     if (exec_reg(regExpSimbolos, string))        return "SIMBOLO";
-    if (exec_reg(regExpIdentificador, string))   return "IDENTIFICADOR";
+    if (exec_reg(regExpIdentificador, string))   return "id";
     if (exec_reg(regExpString, string))          return "STRING";
-    if (exec_reg(regExpInteger, string))         return "INTEGER";
+    if (exec_reg(regExpInteger, string))         return "number";
     if (exec_reg(regExpCaracter, string))        return "CARACTER";
     if (exec_reg(regExpPontoFlutuante, string))  return "PONTO_FLUTUANTE";
     return "TOKEN_INVALIDO";

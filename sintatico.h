@@ -1,3 +1,4 @@
+//#include "estruturas.h"
 #ifndef SINTATICO_H
 #define SINTATICO_H
 
@@ -5,6 +6,7 @@
 extern "C" {
 #endif
 
+//int comparaTerminal(char * str,Token token);
 void preditivoDescendente();
 
 #ifdef __cplusplus
