@@ -30,6 +30,82 @@ void empilha(Pilha* pilha, char * elemento) {
 }
 /* FIM FUNÇÕES RELACIONADAS A PILHA */
 
+
+/* COMEÇO FUNÇÕES RELACIONADAS A LISTA*/
+
+ItemLista*  create_list(Tree* root);
+void        add_list(ItemLista* root, Tree* to_add);
+void        print_list(ItemLista* root);
+ItemLista*  concat_list(ItemLista* l1, ItemLista* l2);
+ItemLista*  last_element(ItemLista*);
+ItemLista*  find_element(ItemLista* list);
+
+ItemLista*  create_list(Tree* root){
+    ItemLista* raiz = (ItemLista*) malloc(sizeof(ItemLista));
+    if(raiz == NULL) return NULL;
+    raiz->el = root;
+    raiz->irmao = NULL;
+    return raiz;
+}
+void        add_list(ItemLista* root, Tree* to_add){
+    ItemLista* current = last_element(root);
+    current->irmao = create_list(to_add);
+    
+}
+void        print_list(ItemLista* root){
+    ItemLista* c = root;
+    while(c != NULL){
+        printf("Element: %s\n", c->el->token.token);
+        c = c->irmao;
+    }
+}
+ItemLista*  concat_list(ItemLista* l1, ItemLista* l2){
+    if(l1 == NULL) return l2;
+    if(l2 == NULL) return l1;
+    
+    ItemLista* current = l1;
+    
+    ItemLista* aux = l1->irmao;
+    
+    while(aux != NULL){
+        current->irmao = aux;
+        aux = aux->irmao;
+    }
+    
+    aux = l2;
+    
+    while(aux != NULL){
+        add_list(current, aux->el);
+        aux = aux->irmao;
+    }
+    return current;
+}
+ItemLista*  last_element(ItemLista* list){
+    ItemLista* last = list;
+    while(last->irmao != NULL) {
+        last = last->irmao;
+    }
+    return last;
+}
+ItemLista*  find_leafs(Tree* root){
+    ItemLista* l = NULL;
+    
+    if(root->filhos == NULL){
+        return create_list(root);
+    }
+
+    Tree* filho = root->filhos;
+    while(filho != NULL){
+        l  = concat_list(l, find_leafs(filho));
+        filho = filho->irmaos;
+    }
+        
+    return l;
+}
+
+/* FIM FUNÇÕES RELACIONADAS A LISTA */
+
+
 /* COMEÇO FUNÇÕES RELACIONADAS A ÁRVORE */
 Tree*   create_tree (Tree * pai, Token tok);
 Tree*   last_brother(Tree * t);
@@ -38,7 +114,7 @@ int     add_son     (Tree* root, Token tok_node, Token tok_son);
 int     add_brother (Tree* root, Token tok_node, Token tok_son);
 void    iterate_sons(Tree* root, void (*f)(Tree*, int) );
 
-Tree*   create_tree(Tree* pai, Token tok){
+Tree*       create_tree(Tree* pai, Token tok){
     Tree* no = (Tree*) malloc(sizeof(Tree));
     if(no == NULL) return NULL;
     no->token   = tok;
@@ -47,7 +123,7 @@ Tree*   create_tree(Tree* pai, Token tok){
     no->filhos  = NULL;
     return no;
 }
-Tree*   last_brother(Tree * t){
+Tree*       last_brother(Tree * t){
     if(t->irmaos == NULL){
         return t;
     }
@@ -57,7 +133,8 @@ Tree*   last_brother(Tree * t){
     }
     return node;
 }
-Tree*   find_node(Tree* root, Token tok){
+Tree*       find_node(Tree* root, Token tok){
+    
     if(root == NULL) return 0;
     if(strcmp(tok.token, root->token.token) == 0){
         return root;
@@ -71,7 +148,7 @@ Tree*   find_node(Tree* root, Token tok){
     }
     return ret;
 }
-int     add_son(Tree* root, Token tok_node, Token tok_son){
+int         add_son(Tree* root, Token tok_node, Token tok_son){
     Tree* node = find_node(root, tok_node);
     
     if(node->filhos == NULL){
@@ -86,7 +163,7 @@ int     add_son(Tree* root, Token tok_node, Token tok_son){
     return 1;
     
 }
-int     add_brother(Tree* root, Token tok_node, Token tok_brother){
+int         add_brother(Tree* root, Token tok_node, Token tok_brother){
     if(root == NULL) return 0;
     Tree* primeiro_irmao    = find_node(root, tok_node);
     Tree* node              = last_brother(primeiro_irmao);
@@ -98,7 +175,7 @@ int     add_brother(Tree* root, Token tok_node, Token tok_brother){
     }
     return 1;
 }
-void    iterate_sons(Tree* root, void (*f)(Tree*, int) ){
+void        iterate_sons(Tree* root, void (*f)(Tree*, int) ){
     Tree* son = root->filhos;
     int i = 0;
     while(son != NULL){
@@ -106,6 +183,15 @@ void    iterate_sons(Tree* root, void (*f)(Tree*, int) ){
         son = son->irmaos;
         i++;
     }
+}
+int         reduce_tree  (Tree* root){
+    
+    ItemLista* folhas = find_leafs(root);
+    print_list(folhas);
+//    while(folhas->irmao != NULL){
+//        printf("FOLHAS: %s\n", folhas->el->token.token);
+//        folhas = folhas->irmao;
+//    }
 }
 
 /* FIM FUNÇÕES RELACIONADAS A ÁRVORE */
