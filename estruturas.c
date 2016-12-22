@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "estruturas.h"
+#define NAO_TERMINAL  "NAO_TERMINAL"
 
 /* COMEÇO FUNÇÕES RELACIONADAS A PILHA */
 Pilha       inicializa_pilha(char * t);
@@ -87,16 +88,18 @@ ItemLista*  last_element(ItemLista* list){
     }
     return last;
 }
-ItemLista*  find_leafs(Tree* root){
+ItemLista*  find_leafs(Tree* root, int* number){
     ItemLista* l = NULL;
     
     if(root->filhos == NULL){
+        *number += 1;
         return create_list(root);
     }
 
     Tree* filho = root->filhos;
+    
     while(filho != NULL){
-        l  = concat_list(l, find_leafs(filho));
+        l  = concat_list(l, find_leafs(filho, number));
         filho = filho->irmaos;
     }
         
@@ -185,14 +188,30 @@ void        iterate_sons(Tree* root, void (*f)(Tree*, int) ){
         i++;
     }
 }
+
+
+
+
 int         reduce_tree  (Tree* root){
     
-    ItemLista* folhas = find_leafs(root);
-    print_list(folhas);
-//    while(folhas->irmao != NULL){
-//        printf("FOLHAS: %s\n", folhas->el->token.token);
-//        folhas = folhas->irmao;
-//    }
+    
+    int size = 0;
+    int new_size = -1;
+    while(size != new_size){
+        
+        ItemLista* folhas = find_leafs(root, &size);
+        new_size = size;
+        while(folhas != NULL){
+            Tree* pai = folhas->el->pai;
+            if(strcmp(pai->token.categoria, NAO_TERMINAL) == 0){
+                pai->filhos = folhas->el->irmaos;
+                pai->token = folhas->el->token;
+                free(folhas->el);
+                new_size--;
+            }
+            folhas = folhas->irmao;
+        }
+    }
 }
 
 /* FIM FUNÇÕES RELACIONADAS A ÁRVORE */
