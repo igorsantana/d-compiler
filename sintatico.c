@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NAO_TERMINAL = "NAO_TERMINAL"
+#define NAO_TERMINAL  "NAO_TERMINAL"
 
 Pilha p;
 Tree* arvore;
@@ -17,6 +17,7 @@ Tree* criaArvore(Tree* arv, char* nome, char* categoria);
 Tree* adicionaFilho(Tree* arv, Token token);
 Tree* adicionaFilhoLabel(Tree* arv, char* nome, char* categoria);
 Tree* ajustaPonteiro(Tree* arv, char* token);
+Tree* buscaAntecessor(Tree* arv,char* token);
 
 void preditivoDescendente();
 int comparaTerminal(char * str, Token token);
@@ -97,7 +98,7 @@ Tree* adicionaFilho(Tree* arv, Token token){
         strcpy(arv->token.categoria , "SIMBOLO");
         return arv;
     }
-    add_son(arv, token);
+//    add_son(arv, token);
     return arv;
 }
 
@@ -112,7 +113,7 @@ Tree* adicionaFilhoLabel(Tree* arv, char* nome, char* categoria){
     Token token;
     strcpy(token.token,nome);
     token.categoria = categoria;
-    add_son(arv,token);    
+//    add_son(arv,token);    
     return arv;
 }
 
