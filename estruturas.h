@@ -31,7 +31,7 @@ void        empilha(Pilha* pilha, char * elemento);
 
 Tree*   create_tree (Tree * pai, Token tok);
 Tree*   find_node   (Tree* root, Token tok );
-int     add_son     (Tree* root, Token tok_node, Token tok_son);
+int     add_son     (Tree* root, Token tok_son);
 int     add_brother (Tree* root, Token tok_node, Token tok_son);
 void    iterate_sons(Tree* root, void (*f)(Tree*, int) );
 int     reduce_tree (Tree* root);

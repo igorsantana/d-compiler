@@ -7,13 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NAO_TERMINAL  "NAO_TERMINAL"
+#define NAO_TERMINAL "NAO_TERMINAL"
 
 Pilha p;
 Tree* arvore;
 
 Tree* criaArvore(Tree* arv, char* nome, char* categoria);
-//Tree* removeLambda(Tree* arv);
 Tree* adicionaFilho(Tree* arv, Token token);
 Tree* adicionaFilhoLabel(Tree* arv, char* nome, char* categoria);
 Tree* ajustaPonteiro(Tree* arv, char* token);
@@ -22,6 +21,8 @@ Tree* buscaAntecessor(Tree* arv,char* token);
 void preditivoDescendente();
 int comparaTerminal(char * str, Token token);
 int retornaIndiceTerminal(Token token);
+
+
 void preditivoDescendente() {
     carregaTabela();
     p = inicializa_pilha("$");
@@ -40,26 +41,31 @@ void preditivoDescendente() {
             desempilha(&p);
         } else if (!comparaTerminal(X->c, a)) {
             arvore = adicionaFilho(arvore,a);
+//            printf("\n%s\n",X->c);
             a = getToken();
             indexA = retornaIndiceTerminal(a);
             desempilha(&p);
         } else if (!isupper(X->c[0])) {
-            printf("Símbolo inválido, Errouuuuuuu");
+            printf("Símbolo inválido.");
             break;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter <= 0) {
             printf("%i/%i", indexX, indexX);
-            printf("Erro. erro de gramática. Errouuuuuuuu");
+            printf("Erro. erro de gramática.");
             break;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter > 0) {
+//            printf("\nPai->%s == Filho -> ",X->c);
             desempilha(&p);
             for (int i = matrizPreditiva[indexX][indexA].indexCaracter - 1; i >= 0; i--) {
-                arvore = adicionaFilhoLabel(arvore,matrizPreditiva[indexX][indexA].caracteres[i].c,NAO_TERMINAL);
                 empilha(&p, matrizPreditiva[indexX][indexA].caracteres[i].c);
+            }
+            for (int i = 0; i < matrizPreditiva[indexX][indexA].indexCaracter; i++) {
+                arvore = adicionaFilhoLabel(arvore,matrizPreditiva[indexX][indexA].caracteres[i].c,NAO_TERMINAL);
             }
         }
         X = p.topo;
         arvore = ajustaPonteiro(arvore,X->c);
         indexX = retornaIndiceNT(X->c);
+//        printf("\naki1\n");
     }
 
 }
@@ -71,11 +77,13 @@ void preditivoDescendente() {
  * @param categoria
  * @return 
  */
-Tree* criaArvore(Tree* arvore, char* nome, char* categoria){
+Tree* criaArvore(Tree* arv, char* nome, char* categoria){
     Token token;
     strcpy(token.token,nome);
-    token.categoria=categoria;
-    arvore = create_tree (NULL, token);
+    token.categoria = categoria;
+    arv = create_tree (NULL, token);
+//    printf("\nNó raiz -> %s\n",arv->token.token);
+    return arv;
 }
 
 /**
@@ -95,10 +103,12 @@ Tree* removeLambda(Tree* arv){
  */
 Tree* adicionaFilho(Tree* arv, Token token){
     if (!strcmp(token.categoria, "SIMBOLO")) {
-        strcpy(arv->token.categoria , "SIMBOLO");
+        arv->token.categoria = "SIMBOLO";
+//        printf("\naki2\n");
         return arv;
     }
-//    add_son(arv, token);
+//    printf("nó -> %s", token.token);
+    add_son(arv, token);
     return arv;
 }
 
@@ -110,15 +120,21 @@ Tree* adicionaFilho(Tree* arv, Token token){
  * @return 
  */
 Tree* adicionaFilhoLabel(Tree* arv, char* nome, char* categoria){
+//    printf("\tfilho->%s|",nome);
     Token token;
     strcpy(token.token,nome);
     token.categoria = categoria;
-//    add_son(arv,token);    
+    add_son(arv,token);    
     return arv;
 }
 
+/**
+ * 
+ * @param arv
+ * @param token
+ * @return 
+ */
 Tree* ajustaPonteiro(Tree* arv, char* token){
-    
     Tree* current = arv->filhos;
     while(current!= NULL){
         if(!strcmp(token,current->token.token)){
@@ -126,15 +142,22 @@ Tree* ajustaPonteiro(Tree* arv, char* token){
         }
         current = current->irmaos;
     }
-    
     return buscaAntecessor(arv,token);
 }
 
+
+/**
+ * 
+ * @param arv
+ * @param token
+ * @return 
+ */
 Tree* buscaAntecessor(Tree* arv,char* token){
-    Tree* current = arv->irmaos;
-    
+    Tree* current = arv;
+
     while(current != NULL){
         if(!strcmp(current->token.token,token)){
+//            printf("\n%s-%s\n",token,current->token.token);
             return current;
         }
         if(current->irmaos == NULL){
@@ -157,6 +180,5 @@ int retornaIndiceTerminal(Token token) {
     if (!strcmp(token.categoria, "SIMBOLO")) {
         return retornaIndiceT(token.token);
     }
-    //        printf("")
     return retornaIndiceT(token.categoria);
 }

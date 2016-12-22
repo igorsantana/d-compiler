@@ -109,8 +109,8 @@ ItemLista*  find_leafs(Tree* root){
 /* COMEÇO FUNÇÕES RELACIONADAS A ÁRVORE */
 Tree*   create_tree (Tree * pai, Token tok);
 Tree*   last_brother(Tree * t);
+int     add_son(Tree* root, Token tok_son);
 Tree*   find_node   (Tree* root, Token tok );
-int     add_son     (Tree* root, Token tok_node, Token tok_son);
 int     add_brother (Tree* root, Token tok_node, Token tok_son);
 void    iterate_sons(Tree* root, void (*f)(Tree*, int) );
 
@@ -148,8 +148,9 @@ Tree*       find_node(Tree* root, Token tok){
     }
     return ret;
 }
-int         add_son(Tree* root, Token tok_node, Token tok_son){
-    Tree* node = find_node(root, tok_node);
+
+int     add_son(Tree* root, Token tok_son){
+    Tree* node = root;
     
     if(node->filhos == NULL){
         node->filhos = create_tree(node, tok_son);
