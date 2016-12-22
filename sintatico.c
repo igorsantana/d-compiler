@@ -17,6 +17,8 @@ Tree* adicionaFilho(Tree* arv, Token token);
 Tree* adicionaFilhoLabel(Tree* arv, char* nome, char* categoria);
 Tree* ajustaPonteiro(Tree* arv, char* token);
 Tree* buscaAntecessor(Tree* arv,char* token);
+Tree* voltaTopo(Tree* arvore);
+Tree* printaArvore(Tree* arvore);
 
 void preditivoDescendente();
 int comparaTerminal(char * str, Token token);
@@ -67,7 +69,12 @@ void preditivoDescendente() {
         indexX = retornaIndiceNT(X->c);
 //        printf("\naki1\n");
     }
-
+    
+    arvore = voltaTopo(arvore);
+    
+    reduce_tree(arvore);
+    
+    printaArvore(arvore);
 }
 
 /**
@@ -148,6 +155,20 @@ Tree* ajustaPonteiro(Tree* arv, char* token){
 
 /**
  * 
+ * @param arvore
+ * @return 
+ */
+Tree* voltaTopo(Tree* arvore){
+    while(arvore != NULL){
+        if(arvore->pai == NULL){
+            return arvore;
+        }
+    }
+    return NULL;
+}
+
+/**
+ * 
  * @param arv
  * @param token
  * @return 
@@ -166,6 +187,11 @@ Tree* buscaAntecessor(Tree* arv,char* token){
             current = current->irmaos;
         }
     }
+    return NULL;
+}
+
+Tree* printaArvore(Tree* arvore){
+//    while()
     return NULL;
 }
 
