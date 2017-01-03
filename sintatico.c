@@ -17,8 +17,8 @@ Tree* adicionaFilho(Tree* arv, Token token);
 Tree* adicionaFilhoLabel(Tree* arv, char* nome, char* categoria);
 Tree* ajustaPonteiro(Tree* arv, char* token);
 Tree* buscaAntecessor(Tree* arv,char* token);
-Tree* voltaTopo(Tree* arvore);
-Tree* printaArvore(Tree* arvore);
+Tree* voltaTopo(Tree* arv);
+void printaArvore(Tree* arvore);
 
 void preditivoDescendente();
 int comparaTerminal(char * str, Token token);
@@ -39,11 +39,9 @@ void preditivoDescendente() {
 
     while (strcmp(X->c, "$")) {
         if (!strcmp("lambda", X->c)) {
-//            arvore = removeLambda(arvore);
             desempilha(&p);
         } else if (!comparaTerminal(X->c, a)) {
             arvore = adicionaFilho(arvore,a);
-//            printf("\n%s\n",X->c);
             a = getToken();
             indexA = retornaIndiceTerminal(a);
             desempilha(&p);
@@ -51,11 +49,9 @@ void preditivoDescendente() {
             printf("Símbolo inválido.");
             break;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter <= 0) {
-            printf("%i/%i", indexX, indexX);
             printf("Erro. erro de gramática.");
             break;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter > 0) {
-//            printf("\nPai->%s == Filho -> ",X->c);
             desempilha(&p);
             for (int i = matrizPreditiva[indexX][indexA].indexCaracter - 1; i >= 0; i--) {
                 empilha(&p, matrizPreditiva[indexX][indexA].caracteres[i].c);
@@ -67,11 +63,9 @@ void preditivoDescendente() {
         X = p.topo;
         arvore = ajustaPonteiro(arvore,X->c);
         indexX = retornaIndiceNT(X->c);
-//        printf("\naki1\n");
     }
     
     arvore = voltaTopo(arvore);
-    
     reduce_tree(arvore);
     
     printaArvore(arvore);
@@ -89,18 +83,9 @@ Tree* criaArvore(Tree* arv, char* nome, char* categoria){
     strcpy(token.token,nome);
     token.categoria = categoria;
     arv = create_tree (NULL, token);
-//    printf("\nNó raiz -> %s\n",arv->token.token);
     return arv;
 }
 
-/**
- * Remove todo pai que não tem outro filho a não ser o lambda
- * @param arv
- * @return 
- */
-Tree* removeLambda(Tree* arv){
-    
-}
 
 /**
  * Adiciona um filho no nó passado um Token
@@ -111,10 +96,8 @@ Tree* removeLambda(Tree* arv){
 Tree* adicionaFilho(Tree* arv, Token token){
     if (!strcmp(token.categoria, "SIMBOLO")) {
         arv->token.categoria = "SIMBOLO";
-//        printf("\naki2\n");
         return arv;
     }
-//    printf("nó -> %s", token.token);
     add_son(arv, token);
     return arv;
 }
@@ -127,7 +110,6 @@ Tree* adicionaFilho(Tree* arv, Token token){
  * @return 
  */
 Tree* adicionaFilhoLabel(Tree* arv, char* nome, char* categoria){
-//    printf("\tfilho->%s|",nome);
     Token token;
     strcpy(token.token,nome);
     token.categoria = categoria;
@@ -142,6 +124,10 @@ Tree* adicionaFilhoLabel(Tree* arv, char* nome, char* categoria){
  * @return 
  */
 Tree* ajustaPonteiro(Tree* arv, char* token){
+    if(!strcmp("$",token)){
+        return arv;
+    }
+    
     Tree* current = arv->filhos;
     while(current!= NULL){
         if(!strcmp(token,current->token.token)){
@@ -155,14 +141,15 @@ Tree* ajustaPonteiro(Tree* arv, char* token){
 
 /**
  * 
- * @param arvore
+ * @param arv
  * @return 
  */
-Tree* voltaTopo(Tree* arvore){
-    while(arvore != NULL){
-        if(arvore->pai == NULL){
-            return arvore;
+Tree* voltaTopo(Tree* arv){
+    while(arv != NULL){
+        if(arv->pai == NULL){
+            return arv;
         }
+        arv = arv->pai;
     }
     return NULL;
 }
@@ -190,9 +177,26 @@ Tree* buscaAntecessor(Tree* arv,char* token){
     return NULL;
 }
 
-Tree* printaArvore(Tree* arvore){
-//    while()
-    return NULL;
+/**
+ * 
+ * @param arvore
+ */
+void printaArvore(Tree* arvore){
+    
+    printf("\n%s,%s->",arvore->token.token,arvore->token.categoria);
+    
+    Tree* atual = arvore->filhos;
+    while(atual != NULL){
+        printf("%s--",atual->token.token);
+        atual = atual->irmaos;
+    }
+    
+    atual = arvore->filhos;
+    while(atual != NULL){
+        printaArvore(atual);
+        atual = atual->irmaos;
+    }
+    
 }
 
 int comparaTerminal(char * str, Token token) {

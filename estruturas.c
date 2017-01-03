@@ -3,6 +3,7 @@
 #include <string.h>
 #include "estruturas.h"
 #define NAO_TERMINAL  "NAO_TERMINAL"
+#define LAMBDA  "lambda"
 
 /* COMEÇO FUNÇÕES RELACIONADAS A PILHA */
 Pilha       inicializa_pilha(char * t);
@@ -51,7 +52,6 @@ ItemLista*  create_list(Tree* root){
 void        add_list(ItemLista* root, Tree* to_add){
     ItemLista* current = last_element(root);
     current->irmao = create_list(to_add);
-    
 }
 void        print_list(ItemLista* root){
     ItemLista* c = root;
@@ -64,12 +64,16 @@ ItemLista*  concat_list(ItemLista* l1, ItemLista* l2){
     if(l1 == NULL) return l2;
     if(l2 == NULL) return l1;
     
+    printf("\nl1\n");
+    print_list(l1);
+    printf("\nl2\n");
+    print_list(l2);
     ItemLista* current = l1;
     
     ItemLista* aux = l1->irmao;
     
     while(aux != NULL){
-        current->irmao = aux;
+        current = aux;
         aux = aux->irmao;
     }
     
@@ -79,7 +83,7 @@ ItemLista*  concat_list(ItemLista* l1, ItemLista* l2){
         add_list(current, aux->el);
         aux = aux->irmao;
     }
-    return current;
+    return l1;
 }
 ItemLista*  last_element(ItemLista* list){
     ItemLista* last = list;
@@ -93,6 +97,7 @@ ItemLista*  find_leafs(Tree* root, int* number){
     
     if(root->filhos == NULL){
         *number += 1;
+        printf("%s\n",root->token.token);
         return create_list(root);
     }
 
@@ -116,6 +121,12 @@ int     add_son(Tree* root, Token tok_son);
 Tree*   find_node   (Tree* root, Token tok );
 int     add_brother (Tree* root, Token tok_node, Token tok_son);
 void    iterate_sons(Tree* root, void (*f)(Tree*, int) );
+void    substituir_filhos(Tree* pai, Tree* filho);
+
+void remove_lambda(Tree* pai,Tree* filho,ItemLista* lista, ItemLista* atual);
+void remove_no(Tree* pai,Tree* filho);
+void remove_filho(Tree* pai, Tree* filho);
+int tamanho_filhos(Tree* pai);
 
 Tree*       create_tree(Tree* pai, Token tok){
     Tree* no = (Tree*) malloc(sizeof(Tree));
@@ -193,25 +204,120 @@ void        iterate_sons(Tree* root, void (*f)(Tree*, int) ){
 
 
 int         reduce_tree  (Tree* root){
-    
-    
     int size = 0;
     int new_size = -1;
-    while(size != new_size){
-        
-        ItemLista* folhas = find_leafs(root, &size);
-        new_size = size;
-        while(folhas != NULL){
-            Tree* pai = folhas->el->pai;
-            if(strcmp(pai->token.categoria, NAO_TERMINAL) == 0){
-                pai->filhos = folhas->el->irmaos;
-                pai->token = folhas->el->token;
-                free(folhas->el);
-                new_size--;
+    ItemLista* folhas = find_leafs(root, &size);
+    ItemLista* atual;
+    
+    printf("\n\n");
+    atual = folhas;
+    while(atual!=NULL){
+        printf("%s\n",atual->el->token.token);
+        atual = atual->irmao;
+    }
+    printf("\n");
+    
+    while(new_size){
+        atual = folhas;
+        new_size = 0;
+        while(atual != NULL){
+            Tree* pai = atual->el->pai;
+            if(!strcmp(atual->el->token.token,LAMBDA)){
+                remove_lambda(pai,atual->el,folhas,atual);
+            }else if(pai != NULL && strcmp(pai->token.categoria, NAO_TERMINAL) == 0){
+                substituir_filhos(pai,atual->el);
+                pai->token = atual->el->token;
+                free(atual->el);
+                atual->el = pai;
+                new_size++;
             }
-            folhas = folhas->irmao;
+            atual = atual->irmao;
         }
     }
+}
+
+void substituir_filhos(Tree* pai,Tree* filho){
+    Tree* antes;
+    if(filho->filhos == NULL){
+        antes = pai->filhos;
+        if(pai->filhos == filho){
+            pai->filhos = filho->irmaos;
+            return;
+        }
+        while(antes->irmaos != filho){
+            antes = antes->irmaos;
+        }
+        antes->irmaos = filho->irmaos;
+        return;
+    }
+    Tree* depois;
+    if(pai->filhos == filho){
+        depois = filho->filhos;
+        while(depois->irmaos != NULL){
+            depois = depois->irmaos;
+        }
+        depois->irmaos = filho->irmaos;
+        pai->filhos = filho->filhos;
+        return;
+    }
+    
+    antes = pai->filhos;
+    while(antes->irmaos != filho){
+        antes = antes->irmaos;
+    }
+    depois = filho->filhos;
+    while(depois->irmaos!= NULL){
+        depois = depois->irmaos;
+    }
+    antes->irmaos = filho->filhos;
+    depois->irmaos = filho->irmaos;
+}
+
+void remove_lambda(Tree* pai,Tree* filho,ItemLista* lista, ItemLista* atual){
+    while(lista->irmao != atual){
+        lista = lista->irmao;
+    }
+    lista->irmao = atual->irmao;
+    free(atual);
+    atual = lista;
+    remove_no(pai,filho);
+}
+
+void remove_no(Tree* pai,Tree* filho){
+    if(!strcmp(pai->token.categoria,NAO_TERMINAL) && tamanho_filhos(pai) == 1){
+        pai->filhos = NULL;
+        remove_no(pai->pai,pai);
+        return;
+    }
+    remove_filho(pai,filho);
+}
+
+void remove_filho(Tree* pai, Tree* filho){
+    Tree* atual = pai->filhos;
+    
+    if(atual == filho){
+        pai->filhos = filho->irmaos;
+        free(filho);
+        return;
+    }
+    
+    while(atual->irmaos != filho){
+        atual = atual->irmaos;
+    }
+    
+    atual->irmaos = filho->filhos;
+    
+    free(filho);
+}
+
+int tamanho_filhos(Tree* pai){
+    int tamanho = 0;
+    Tree* atual = pai->filhos;
+    while(atual != NULL){
+        tamanho++;
+        atual = atual->irmaos;
+    }
+    return tamanho;
 }
 
 /* FIM FUNÇÕES RELACIONADAS A ÁRVORE */
