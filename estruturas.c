@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "estruturas.h"
-#define NAO_TERMINAL  "NAO_TERMINAL"
-#define LAMBDA  "lambda"
+
+#define NAO_TERMINAL "NAO_TERMINAL"
+#define LAMBDA       "lambda"
+#define SEM_VALOR    -1
 
 /* COMEÇO FUNÇÕES RELACIONADAS A PILHA */
 Pilha       inicializa_pilha(char * t);
@@ -113,6 +115,155 @@ ItemLista*  find_leafs(Tree* root, int* number){
 
 /* FIM FUNÇÕES RELACIONADAS A LISTA */
 
+/* COMEÇO FUNÇÕES RELACIONADAS A LISTA DA TABELA DE SIMBOLOS */
+
+ValorVariavel* create(int profundidade, char* tipo, char* categoria, void* valor);
+ItemVariavel*  create_lista();
+void           print_variavel(ItemVariavel* raiz);
+void           add_variavel(ItemVariavel* raiz, char* nome);
+void           add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel);
+void*          get_valor(ItemVariavel* raiz, char* nome, int profundidade);
+
+ValorVariavel* create(int profundidade, char* tipo, char* categoria, void* valor) {
+    ValorVariavel* to_return = malloc(sizeof(ValorVariavel));
+                   to_return->proximo = NULL;
+                   to_return->profundidade = profundidade;
+                   strcpy(&to_return->tipo, tipo);
+                   strcpy(&to_return->categoria, categoria);
+                   to_return->valor = valor;
+    return to_return;
+    
+}
+
+ItemVariavel* create_lista() {
+    ItemVariavel* to_return = malloc(sizeof(ItemVariavel));
+                  to_return->primeiro = NULL;
+                  to_return->proximo  = NULL;
+                  to_return->nome     = NULL;
+    return to_return;
+}
+
+void print_variavel(ItemVariavel* raiz) {
+    ItemVariavel* current = raiz;
+    while (current != NULL) {
+        current = current->proximo;
+    }
+}
+
+void add_variavel(ItemVariavel* raiz, char* nome) {
+    if (raiz->nome == NULL) {
+        strcpy(&raiz->nome, nome);
+        return;
+    }
+    ItemVariavel* current = raiz;
+    int flag = 0;
+    while (current->proximo != NULL) {
+        if (strcmp(&current->nome, nome) == 0) {
+            flag = 1;
+            break;
+        }
+        current = current->proximo;
+    }
+    
+    if (flag == 0) { // Nome nao inserido
+        ItemVariavel* novo = create_lista();
+            strcpy(&novo->nome, nome);
+        current->proximo = novo;
+    }
+}
+
+void add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel) {
+    ItemVariavel* index = raiz;
+    while(index->proximo != NULL) {
+        if (strcmp(&index->nome, nome) == 0) {
+            break;
+        }
+        index = index->proximo;
+    }
+    
+    if (index != NULL) {
+        ValorVariavel* current = index->primeiro;
+        
+        if (current == NULL) {
+           index->primeiro = variavel;
+           return;
+        }
+        while (current->proximo != NULL) {
+            current = current->proximo;
+        }
+        current->proximo  = variavel;
+        variavel->proximo = NULL;
+    }
+}
+
+void* get_valor(ItemVariavel* raiz, char* nome, int profundidade) {
+    ItemVariavel* index = raiz;
+    while (index->proximo != NULL) {
+        if (strcmp(&index->nome, nome) == 0) {
+            break;
+        }
+        index = index->proximo;
+    }
+    
+    // Entrada nao encontrada:
+    if (strcmp(&index->nome, nome) != 0) return SEM_VALOR;
+    
+    ValorVariavel* current = index->primeiro;
+    while (current != NULL) {
+        if (current->profundidade == profundidade) {
+            return current->valor;
+        }
+        current = current->proximo;
+    }
+    return SEM_VALOR;
+}
+
+/* FIM FUNÇÕES RELACIONADAS A LISTA DA TABELA DE SIMBOLOS */
+
+/* COMEÇO FUNÇÕES RELACIONADAS AO ESCOPO */
+Escopo* create_escopo();
+void    add_escopo(Escopo* raiz, char* nome, int profundidade);
+Escopo* get_escopo(Escopo* raiz, char* nome);
+
+Escopo* create_escopo() {
+    Escopo* to_return = malloc(sizeof (Escopo));
+            to_return->profundidade = 0;
+            to_return->proximo      = NULL;
+    return  to_return;
+}
+
+void add_escopo(Escopo* raiz, char* nome, int profundidade) {
+    if ((raiz->nome == NULL) && (raiz->profundidade == 0)) {
+        strcpy(&raiz->nome, nome);
+        raiz->profundidade = profundidade;
+        return;
+    }
+    
+    Escopo* novo = create_escopo();
+            strcpy(&novo->nome, nome);
+            novo->profundidade = profundidade;
+    
+    Escopo* current;
+    for (current = raiz; current->proximo != NULL; current = current->proximo);
+    current->proximo = novo;
+}
+
+Escopo* get_escopo(Escopo* raiz, char* nome) {
+    if (raiz->proximo == NULL) {
+        return raiz;
+    }
+    
+    Escopo* current = raiz;
+    while (current != NULL) {
+        if (strncmp(&current->nome, nome, strlen(&current->nome) - 1) == 0) {
+            return current;
+        }
+        current = current->proximo;
+    }
+    return NULL;
+}
+
+/* FIM FUNÇÕES RELACIONADAS AO ESCOPO */
 
 /* COMEÇO FUNÇÕES RELACIONADAS A ÁRVORE */
 Tree*   create_tree (Tree * pai, Token tok);
