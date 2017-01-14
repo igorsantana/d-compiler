@@ -1,39 +1,117 @@
+;
+{
+}
 +
 -
 *
 /
-(
-)
-number
-void
+%
+id
+_IntegerLiteral
+=
+int
+char
+float
 $
 
 Start
-Easy
-Word
-Tool
-Xor
-Face
+Statement
+BlockStatement
+StatementList
+NonEmptyStatement
+NonEmptyStatementNoCaseNoDefault
+ExpressionStatement
+Expression
+CommaExpression
+AssignExpression
+OrOrExpression
+AndAndExpression
+CmpExpression
+AddExpression
+AddExpression1
+MulExpression
+MulExpression1
+PrimaryExpression
+VarDeclarations
+DeclaratorIdentifierList
+DeclaratorIdentifier
+VarDeclaratorIdentifier
+Initializer
+NonVoidInitializer
+BasicTypeX
 
-+ Word + Tool Word
-+ Xor lambda
-- Word - Tool Word
-- Xor lambda
-* Xor * Face Xor
-/ Xor / Face Xor
-( Start Easy
-( Easy Tool Word
-( Tool Face Xor
-( Face ( Easy )
-) Word lambda
-) Xor lambda
-number Start Easy
-number Easy Tool Word
-number Tool Face Xor
-number Face number
-void Start Easy
-void Easy Tool Word
-void Tool Face Xor
-void Face void
-$ Word lambda
-$ Xor lambda
+; Start Statement
+; Statement ;
+; StatementList Statement StatementList
+; AddExpression1 lambda
+; MulExpression1 lambda
+{ Start Statement
+{ Statement BlockStatement
+{ BlockStatement { StatementList }
+{ StatementList Statement StatementList
+} StatementList lambda
++ AddExpression1 + MulExpression AddExpression1
++ MulExpression1 lambda
+- AddExpression1 - MulExpression AddExpression1
+- MulExpression1 lambda
+* MulExpression1 * PrimaryExpression MulExpression1
+/ MulExpression1 / PrimaryExpression MulExpression1
+% MulExpression1 % PrimaryExpression MulExpression1
+id Start Statement
+id Statement NonEmptyStatement
+id StatementList Statement StatementList
+id NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+id NonEmptyStatementNoCaseNoDefault ExpressionStatement
+id ExpressionStatement Expression ;
+id Expression CommaExpression
+id CommaExpression AssignExpression
+id AssignExpression OrOrExpression
+id OrOrExpression AndAndExpression
+id AndAndExpression CmpExpression
+id CmpExpression AddExpression
+id AddExpression MulExpression AddExpression1
+id MulExpression PrimaryExpression MulExpression1
+id PrimaryExpression id
+id DeclaratorIdentifierList DeclaratorIdentifier
+id DeclaratorIdentifier VarDeclaratorIdentifier
+id VarDeclaratorIdentifier id = Initializer
+id Initializer NonVoidInitializer
+id NonVoidInitializer AssignExpression
+_IntegerLiteral Start Statement
+_IntegerLiteral Statement NonEmptyStatement
+_IntegerLiteral StatementList Statement StatementList
+_IntegerLiteral NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+_IntegerLiteral NonEmptyStatementNoCaseNoDefault ExpressionStatement
+_IntegerLiteral ExpressionStatement Expression ;
+_IntegerLiteral Expression CommaExpression
+_IntegerLiteral CommaExpression AssignExpression
+_IntegerLiteral AssignExpression OrOrExpression
+_IntegerLiteral OrOrExpression AndAndExpression
+_IntegerLiteral AndAndExpression CmpExpression
+_IntegerLiteral CmpExpression AddExpression
+_IntegerLiteral AddExpression MulExpression AddExpression1
+_IntegerLiteral MulExpression PrimaryExpression MulExpression1
+_IntegerLiteral PrimaryExpression _IntegerLiteral
+_IntegerLiteral Initializer NonVoidInitializer
+_IntegerLiteral NonVoidInitializer AssignExpression
+int Start Statement
+int Statement NonEmptyStatement
+int StatementList Statement StatementList
+int NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+int NonEmptyStatementNoCaseNoDefault VarDeclarations
+int VarDeclarations BasicTypeX DeclaratorIdentifierList ;
+int BasicTypeX int
+char Start Statement
+char Statement NonEmptyStatement
+char StatementList Statement StatementList
+char NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+char NonEmptyStatementNoCaseNoDefault VarDeclarations
+char VarDeclarations BasicTypeX DeclaratorIdentifierList ;
+char BasicTypeX char
+float Start Statement
+float Statement NonEmptyStatement
+float StatementList Statement StatementList
+float NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+float NonEmptyStatementNoCaseNoDefault VarDeclarations
+float VarDeclarations BasicTypeX DeclaratorIdentifierList ;
+float BasicTypeX float

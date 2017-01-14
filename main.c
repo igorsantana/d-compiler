@@ -3,6 +3,7 @@
 #include "estruturas.h"
 #include "lexico.h"
 #include "sintatico.h"
+#include "gerador-intermediario.h"
 
 int main(int argc, char** argv) {
     
@@ -13,9 +14,9 @@ int main(int argc, char** argv) {
     }
     arquivo_leitura(arquivo);
 
-    preditivoDescendente();
+    Tree* arvore = preditivoDescendente();
     
-    
+    gerador_intermediario(arvore);
     
 //    Token x1 = getToken();
 //    Token x2 = getToken();

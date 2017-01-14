@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/automato.o \
 	${OBJECTDIR}/estruturas.o \
+	${OBJECTDIR}/gerador-intermediario.o \
 	${OBJECTDIR}/lexico.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/sintatico.o \
@@ -76,6 +77,11 @@ ${OBJECTDIR}/estruturas.o: estruturas.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/estruturas.o estruturas.c
+
+${OBJECTDIR}/gerador-intermediario.o: gerador-intermediario.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/gerador-intermediario.o gerador-intermediario.c
 
 ${OBJECTDIR}/lexico.o: lexico.c
 	${MKDIR} -p ${OBJECTDIR}

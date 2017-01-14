@@ -44,11 +44,10 @@ void leituraDosConjuntos() {
         }
 
         for (int k = 0; k < strlen(conjuntoT[indexT].c); k++) {
-            if (conjuntoT[indexT].c[k] == '\n') {
+            if (conjuntoT[indexT].c[k] == '\n' || conjuntoT[indexT].c[k] == ' ') {
                 conjuntoT[indexT].c[k] = '\0';
             }
         }
-
         indexT++;
     }
 
@@ -58,7 +57,7 @@ void leituraDosConjuntos() {
         }
 
         for (int k = 0; k < strlen(conjuntoNT[indexNT].c); k++) {
-            if (conjuntoNT[indexNT].c[k] == '\n') {
+            if (conjuntoNT[indexNT].c[k] == '\n' || conjuntoNT[indexNT].c[k] == ' ') {
                 conjuntoNT[indexNT].c[k] = '\0';
             }
         }
@@ -66,7 +65,6 @@ void leituraDosConjuntos() {
         indexNT++;
     }
     
-//    printf("T - %i NT - %i", indexT,indexNT);
     while (fscanf(arquivo_preditivo, "%s %s %[^\n]s\n", &str1, &str2, &str3) != EOF) {
         int i = 0;
         while (i <= strlen(str3)) {
@@ -86,11 +84,14 @@ void leituraDosConjuntos() {
             }
             i++;
         }
-//        printf("[%s,%i]-[%s,%i]-",str2,linha,str1,coluna);
-//        for(int h = 0; h < matrizPreditiva[linha][coluna].indexCaracter;h++){
-//            printf("%i / %s #",h,matrizPreditiva[linha][coluna].caracteres[h].c);
+//        if(str1[0] == ';'){
+//            
+//            printf("[%s,%i]-[%s,%i]- %i -",str2,linha,str1,coluna,matrizPreditiva[linha][coluna].indexCaracter);
+//            for(int h = 0; h < matrizPreditiva[linha][coluna].indexCaracter;h++){
+//                printf("%i / %s #",h,matrizPreditiva[linha][coluna].caracteres[h].c);
+//            }
+//            printf("\n\n");
 //        }
-//        printf("\n\n");
     }
 }
 

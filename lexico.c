@@ -70,8 +70,8 @@ int verifica_composicao(char a, char b){
     return 0;
 }
 int verifica_separador(char c){
-    char separadores[5] = {' ', '\t', '\n','\r', ';'};
-    char separadores_uteis[16] = {'{','}','[',']','(',')', '-', '+', '*', '/', '=', ',', '<', '>', '.'};
+    char separadores[5] = {' ', '\t', '\n','\r'};
+    char separadores_uteis[16] = {'{','}','[',']','(',')', '-', '+', '*', '/', '=', ',', '<', '>', '.', ';'};
     int i;
     for(i = 0; i < 5; i++){
         if(separadores[i] == c){
@@ -134,6 +134,8 @@ Token eof_token(){
     eof.token[1] = '\0';
     return eof;
 }
+
+
 Token pegaProximoToken() {
     if(retorna_buf == 1){
         retorna_buf = 0;
@@ -176,9 +178,7 @@ Token pegaProximoToken() {
                 }
             }
         }
-
         int tipo_sep = verifica_separador(c);
-        
         if(tipo_sep == NAO_SEPARADOR){
             buf[buf_inc] = c;
             buf_inc++;
@@ -206,7 +206,6 @@ Token pegaProximoToken() {
             return to_return;
         } 
         else if(tipo_sep == SEPARADOR_UTIL && VAZIO_FLAG == 0) {
-            
             if(c == '.'){
                buf[buf_inc] = '\0';
                if (strcmp(analisarToken(buf), "INTEGER") == 0){
@@ -223,7 +222,7 @@ Token pegaProximoToken() {
                    buf_inc = 0;   
                    return to_return;
                }
-            } 
+            }
             
             buf[buf_inc] = '\0';   
             atualiza_token(&to_return, buf, 1);
