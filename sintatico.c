@@ -60,12 +60,12 @@ Tree* preditivoDescendente() {
         } else if (matrizPreditiva[indexX][indexA].indexCaracter > 0) {
 //        printf("4\n");
             desempilha(&p);
-//            printf("\nempilha-%i->",matrizPreditiva[indexX][indexA].indexCaracter);
+//            printf("\n\t empilha->");
             for (int i = matrizPreditiva[indexX][indexA].indexCaracter - 1; i >= 0; i--) {
 //                printf("%s|",matrizPreditiva[indexX][indexA].caracteres[i].c);
                 empilha(&p, matrizPreditiva[indexX][indexA].caracteres[i].c);
             }
-//            printf("\n\n");
+//            printf("\n");
             for (int i = 0; i < matrizPreditiva[indexX][indexA].indexCaracter; i++) {
                 arvore = adicionaFilhoLabel(arvore,matrizPreditiva[indexX][indexA].caracteres[i].c,NAO_TERMINAL);
             }
@@ -80,7 +80,7 @@ Tree* preditivoDescendente() {
     
     arvore = voltaTopo(arvore);
 //        printf("8\n");
-//    printaArvore(arvore);
+    printaArvore(arvore);
     printf("\n\n\n");
     reduce_tree(arvore);
     

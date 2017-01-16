@@ -140,7 +140,7 @@ void substituir_filhos(Tree* pai, Tree* filho);
 void atualiza_pai(Tree* arv);
 Tree* ultimo_irmao(Tree* arv);
 
-void remove_lambda(Tree* pai, Tree* filho, ItemLista* lista, ItemLista* atual);
+ItemLista* remove_lambda(Tree* pai, Tree* filho, ItemLista* lista, ItemLista* atual);
 void remove_no(Tree* pai, Tree* filho);
 void remove_filho(Tree* pai, Tree* filho);
 int tamanho_filhos(Tree* pai);
@@ -230,8 +230,11 @@ int reduce_tree(Tree* root) {
     atual = folhas;
     while (atual != NULL) {
         Tree* pai = atual->el->pai;
-        if (!strcmp(atual->el->token.token, LAMBDA) || separador_inutil(atual->el->token)) {
-            remove_lambda(pai, atual->el, folhas, atual);
+        if (!strcmp(atual->el->token.token, LAMBDA)
+//                || separador_inutil(atual->el->token)
+                ) {
+//            printf("\n%s\n", atual->el->token.token);
+            folhas = remove_lambda(pai, atual->el, folhas, atual);
         }
         atual = atual->irmao;
     }
@@ -275,9 +278,9 @@ int reduce_tree(Tree* root) {
  * @return 
  */
 int separador_inutil(Token token) {
-    char separadores_inuteis[16][3] = {";"};
+    char separadores_inuteis[3][3] = {";", "{", "}"};
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 3; i++) {
         if (!strcmp(separadores_inuteis[i], token.token)) {
             return 1;
         }
@@ -298,7 +301,7 @@ void substituir_filhos(Tree* pai, Tree* filho) {
             return;
         }
         antes = pai->filhos;
-        while(antes->irmaos != filho){
+        while (antes->irmaos != filho) {
             antes = antes->irmaos;
         }
         antes->irmaos = filho->irmaos;
@@ -338,19 +341,24 @@ Tree* ultimo_irmao(Tree* arv) {
         return NULL;
     }
     while (arv->irmaos != NULL) {
-        printf("5.63,%s\n", arv->token.token);
         arv = arv->irmaos;
     }
     return arv;
 }
 
-void remove_lambda(Tree* pai, Tree* filho, ItemLista* lista, ItemLista* atual) {
-    while (lista->irmao != atual) {
+ItemLista* remove_lambda(Tree* pai, Tree* filho, ItemLista* lista, ItemLista* atual) {
+    if (lista == atual) {
         lista = lista->irmao;
+    } else {
+        ItemLista* current = lista;
+        while (current->irmao != atual) {
+            current = current->irmao;
+        }
+        current->irmao = atual->irmao;
     }
-    lista->irmao = atual->irmao;
     free(atual);
     remove_no(pai, filho);
+    return lista;
 }
 
 void remove_no(Tree* pai, Tree* filho) {

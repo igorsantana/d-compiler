@@ -1,6 +1,13 @@
 ;
 {
 }
+=
+==
+!=
+<
+<=
+>
+>=
 +
 -
 *
@@ -8,10 +15,13 @@
 %
 id
 _IntegerLiteral
-=
 int
 char
 float
+if
+(
+)
+else
 $
 
 Start
@@ -24,9 +34,11 @@ ExpressionStatement
 Expression
 CommaExpression
 AssignExpression
+AssignExpression1
 OrOrExpression
 AndAndExpression
 CmpExpression
+EqualExpression
 AddExpression
 AddExpression1
 MulExpression
@@ -36,20 +48,57 @@ VarDeclarations
 DeclaratorIdentifierList
 DeclaratorIdentifier
 VarDeclaratorIdentifier
+IdentifierDeclarator
+VarDeclaratorIdentifier1
 Initializer
 NonVoidInitializer
 BasicTypeX
+IfStatement
+IfExp
+ElseStatement
+IfCondition
+ScopeStatement
 
 ; Start Statement
 ; Statement ;
 ; StatementList Statement StatementList
+; AssignExpression1 lambda
+; EqualExpression lambda
 ; AddExpression1 lambda
 ; MulExpression1 lambda
+; VarDeclaratorIdentifier1 lambda
+; ElseStatement lambda
 { Start Statement
 { Statement BlockStatement
 { BlockStatement { StatementList }
 { StatementList Statement StatementList
+{ ElseStatement lambda
+{ ScopeStatement BlockStatement
 } StatementList lambda
+} ElseStatement lambda
+= AssignExpression1 = AssignExpression
+= EqualExpression lambda
+= AddExpression1 lambda
+= MulExpression1 lambda
+= VarDeclaratorIdentifier1 = Initializer
+== EqualExpression == AddExpression
+== AddExpression1 lambda
+== MulExpression1 lambda
+!= EqualExpression != AddExpression
+!= AddExpression1 lambda
+!= MulExpression1 lambda
+< EqualExpression < AddExpression
+< AddExpression1 lambda
+< MulExpression1 lambda
+<= EqualExpression <= AddExpression
+<= AddExpression1 lambda
+<= MulExpression1 lambda
+> EqualExpression > AddExpression
+> AddExpression1 lambda
+> MulExpression1 lambda
+>= EqualExpression >= AddExpression
+>= AddExpression1 lambda
+>= MulExpression1 lambda
 + AddExpression1 + MulExpression AddExpression1
 + MulExpression1 lambda
 - AddExpression1 - MulExpression AddExpression1
@@ -65,18 +114,22 @@ id NonEmptyStatementNoCaseNoDefault ExpressionStatement
 id ExpressionStatement Expression ;
 id Expression CommaExpression
 id CommaExpression AssignExpression
-id AssignExpression OrOrExpression
+id AssignExpression OrOrExpression AssignExpression1
 id OrOrExpression AndAndExpression
 id AndAndExpression CmpExpression
-id CmpExpression AddExpression
+id CmpExpression AddExpression EqualExpression
 id AddExpression MulExpression AddExpression1
 id MulExpression PrimaryExpression MulExpression1
 id PrimaryExpression id
 id DeclaratorIdentifierList DeclaratorIdentifier
 id DeclaratorIdentifier VarDeclaratorIdentifier
-id VarDeclaratorIdentifier id = Initializer
+id VarDeclaratorIdentifier IdentifierDeclarator VarDeclaratorIdentifier1
+id IdentifierDeclarator id
 id Initializer NonVoidInitializer
 id NonVoidInitializer AssignExpression
+id ElseStatement lambda
+id IfCondition Expression
+id ScopeStatement NonEmptyStatement
 _IntegerLiteral Start Statement
 _IntegerLiteral Statement NonEmptyStatement
 _IntegerLiteral StatementList Statement StatementList
@@ -85,15 +138,18 @@ _IntegerLiteral NonEmptyStatementNoCaseNoDefault ExpressionStatement
 _IntegerLiteral ExpressionStatement Expression ;
 _IntegerLiteral Expression CommaExpression
 _IntegerLiteral CommaExpression AssignExpression
-_IntegerLiteral AssignExpression OrOrExpression
+_IntegerLiteral AssignExpression OrOrExpression AssignExpression1
 _IntegerLiteral OrOrExpression AndAndExpression
 _IntegerLiteral AndAndExpression CmpExpression
-_IntegerLiteral CmpExpression AddExpression
+_IntegerLiteral CmpExpression AddExpression EqualExpression
 _IntegerLiteral AddExpression MulExpression AddExpression1
 _IntegerLiteral MulExpression PrimaryExpression MulExpression1
 _IntegerLiteral PrimaryExpression _IntegerLiteral
 _IntegerLiteral Initializer NonVoidInitializer
 _IntegerLiteral NonVoidInitializer AssignExpression
+_IntegerLiteral ElseStatement lambda
+_IntegerLiteral IfCondition Expression
+_IntegerLiteral ScopeStatement NonEmptyStatement
 int Start Statement
 int Statement NonEmptyStatement
 int StatementList Statement StatementList
@@ -101,6 +157,8 @@ int NonEmptyStatement NonEmptyStatementNoCaseNoDefault
 int NonEmptyStatementNoCaseNoDefault VarDeclarations
 int VarDeclarations BasicTypeX DeclaratorIdentifierList ;
 int BasicTypeX int
+int ElseStatement lambda
+int ScopeStatement NonEmptyStatement
 char Start Statement
 char Statement NonEmptyStatement
 char StatementList Statement StatementList
@@ -108,6 +166,8 @@ char NonEmptyStatement NonEmptyStatementNoCaseNoDefault
 char NonEmptyStatementNoCaseNoDefault VarDeclarations
 char VarDeclarations BasicTypeX DeclaratorIdentifierList ;
 char BasicTypeX char
+char ElseStatement lambda
+char ScopeStatement NonEmptyStatement
 float Start Statement
 float Statement NonEmptyStatement
 float StatementList Statement StatementList
@@ -115,3 +175,20 @@ float NonEmptyStatement NonEmptyStatementNoCaseNoDefault
 float NonEmptyStatementNoCaseNoDefault VarDeclarations
 float VarDeclarations BasicTypeX DeclaratorIdentifierList ;
 float BasicTypeX float
+float ElseStatement lambda
+float ScopeStatement NonEmptyStatement
+if Start Statement
+if Statement NonEmptyStatement
+if StatementList Statement StatementList
+if NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+if NonEmptyStatementNoCaseNoDefault IfStatement
+if IfStatement if IfExp ScopeStatement ElseStatement
+if ElseStatement lambda
+if ScopeStatement NonEmptyStatement
+( IfExp ( IfCondition )
+) AssignExpression1 lambda
+) EqualExpression lambda
+) AddExpression1 lambda
+) MulExpression1 lambda
+else ElseStatement lambda
+$ ElseStatement lambda

@@ -97,9 +97,12 @@ void trata_composicao(char c, char* buf){
     int sep_next = verifica_separador(next);
             
     if(sep_next == SEPARADOR_UTIL && verifica_composicao(c, next)){
-        buf[0] = c; buf[1] = next; buf[2] = '\0';
+        buf[0] = c; 
+        buf[1] = next; 
+        buf[2] = '\0';
     } else {
-        buf[0] = c; buf[1] = '\0';
+        buf[0] = c;
+        buf[1] = '\0';
         caracter_buf = next;
     }
 }
@@ -223,15 +226,19 @@ Token pegaProximoToken() {
                    return to_return;
                }
             }
-            
-            buf[buf_inc] = '\0';   
-            atualiza_token(&to_return, buf, 1);
-            buf_inc = 0;   
-                    
             char buf_aux[3];
             trata_composicao(c, buf_aux);
             atualiza_token(&token_buf, buf_aux, 1);
             retorna_buf = 1;
+            
+            if(!buf_inc){
+                retorna_buf = 0;
+                return token_buf;
+            }
+            buf[buf_inc] = '\0';   
+            atualiza_token(&to_return, buf, 1);
+            buf_inc = 0;   
+                    
             return to_return;
         } 
         else if(tipo_sep == SEPARADOR_UTIL && VAZIO_FLAG == 1){
