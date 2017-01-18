@@ -17,58 +17,58 @@ int main(int argc, char** argv) {
 //    preditivoDescendente();
     
     Escopo*       lista  = create_escopo();
-    
+//    
     add_escopo(lista, "main",     0);
     add_escopo(lista, "funcao_1", 1);
-    add_escopo(lista, "funcao_2", 2);
-    add_escopo(lista, "if"      , 3);
-    
-    ItemVariavel* variaveis = create_lista();
-    
-    add_variavel(variaveis, "a");
-    add_variavel(variaveis, "b");
-    add_variavel(variaveis, "c");
-    add_variavel(variaveis, "d");
-    
-    add_item(variaveis, "a", create(0, "INTEGER", "VAR", (void*) 1));
-    add_item(variaveis, "a", create(1, "INTEGER", "VAR", (void*) 4));
-    add_item(variaveis, "a", create(2, "INTEGER", "VAR", (void*) 5));
-    add_item(variaveis, "a", create(3, "INTEGER", "VAR", (void*) 7));
-    
-    add_item(variaveis, "b", create(3, "INTEGER", "VAR", (void*) 2));
-    
-    add_item(variaveis, "c", create(0, "STRING", "VAR", (void*) "TESTE 1"));
-    add_item(variaveis, "c", create(3, "STRING", "VAR", (void*) "TESTE 2"));
-    
-    add_item(variaveis, "d", create(1, "INTEGER", "VAR", (void*) 7));
-    add_item(variaveis, "d", create(3, "STRING",  "VAR", (void*) "TESTE 3"));
-    
-    int a = (int) get_valor(variaveis, "a", get_escopo(lista, "main")->profundidade);
-    printf("Valor 1 = %i\n", a);
-    
-        a = (int) get_valor(variaveis, "a", get_escopo(lista, "funcao_1")->profundidade);
-    printf("Valor 2 = %i\n", a);
-    
-    a = (int) get_valor(variaveis, "a", get_escopo(lista, "funcao_2")->profundidade);
-    printf("Valor 3 = %i\n", a);
-    
-    a = (int) get_valor(variaveis, "a", get_escopo(lista, "if")->profundidade);
-    printf("Valor 4 = %i\n", a);
-    
-    int b = (int) get_valor(variaveis, "b", get_escopo(lista, "if")->profundidade);
-    printf("Valor 5 = %i\n", b);
-    
-    char* c = (char*) get_valor(variaveis, "c", get_escopo(lista, "main")->profundidade);
-    printf("Valor 6 = %s\n", c);
-    
-          c = (char*) get_valor(variaveis, "c", get_escopo(lista, "if")->profundidade);
-    printf("Valor 7 = %s\n", c);
-    
-    b = (int) get_valor(variaveis, "d", get_escopo(lista, "funcao_1")->profundidade);
-    printf("Valor 8 = %i\n", b);
-    
-    c = (char*) get_valor(variaveis, "d", get_escopo(lista, "if")->profundidade);
-    printf("Valor 9 = %s\n", c);
+//    add_escopo(lista, "funcao_2", 2);
+//    add_escopo(lista, "if"      , 3);
+//    
+//    ItemVariavel* variaveis = create_lista();
+//    
+//    add_variavel(variaveis, "a");
+//    add_variavel(variaveis, "b");
+//    add_variavel(variaveis, "c");
+//    add_variavel(variaveis, "d");
+//    
+//    add_item(variaveis, "a", create(0, "INTEGER", "VAR", (void*) 1));
+//    add_item(variaveis, "a", create(1, "INTEGER", "VAR", (void*) 4));
+//    add_item(variaveis, "a", create(2, "INTEGER", "VAR", (void*) 5));
+//    add_item(variaveis, "a", create(3, "INTEGER", "VAR", (void*) 7));
+//    
+//    add_item(variaveis, "b", create(3, "INTEGER", "VAR", (void*) 2));
+//    
+//    add_item(variaveis, "c", create(0, "STRING", "VAR", (void*) "TESTE 1"));
+//    add_item(variaveis, "c", create(3, "STRING", "VAR", (void*) "TESTE 2"));
+//    
+//    add_item(variaveis, "d", create(1, "INTEGER", "VAR", (void*) 7));
+//    add_item(variaveis, "d", create(3, "STRING",  "VAR", (void*) "TESTE 3"));
+//    
+//    int a = (int) get_valor(variaveis, "a", get_escopo(lista, "main")->profundidade);
+//    printf("Valor 1 = %i\n", a);
+//    
+//        a = (int) get_valor(variaveis, "a", get_escopo(lista, "funcao_1")->profundidade);
+//    printf("Valor 2 = %i\n", a);
+//    
+//    a = (int) get_valor(variaveis, "a", get_escopo(lista, "funcao_2")->profundidade);
+//    printf("Valor 3 = %i\n", a);
+//    
+//    a = (int) get_valor(variaveis, "a", get_escopo(lista, "if")->profundidade);
+//    printf("Valor 4 = %i\n", a);
+//    
+//    int b = (int) get_valor(variaveis, "b", get_escopo(lista, "if")->profundidade);
+//    printf("Valor 5 = %i\n", b);
+//    
+//    char* c = (char*) get_valor(variaveis, "c", get_escopo(lista, "main")->profundidade);
+//    printf("Valor 6 = %s\n", c);
+//    
+//          c = (char*) get_valor(variaveis, "c", get_escopo(lista, "if")->profundidade);
+//    printf("Valor 7 = %s\n", c);
+//    
+//    b = (int) get_valor(variaveis, "d", get_escopo(lista, "funcao_1")->profundidade);
+//    printf("Valor 8 = %i\n", b);
+//    
+//    c = (char*) get_valor(variaveis, "d", get_escopo(lista, "if")->profundidade);
+//    printf("Valor 9 = %s\n", c);
     
 //    Escopo* main      = get_escopo(lista, "main");
 //    Escopo* funcao_1  = get_escopo(lista, "funcao_1");
