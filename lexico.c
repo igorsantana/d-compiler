@@ -70,8 +70,8 @@ int verifica_composicao(char a, char b){
     return 0;
 }
 int verifica_separador(char c){
-    char separadores[5] = {' ', '\t', '\n','\r', ';'};
-    char separadores_uteis[16] = {'{','}','[',']','(',')', '-', '+', '*', '/', '=', ',', '<', '>', '.'};
+    char separadores[5] = {' ', '\t', '\n','\r'};
+    char separadores_uteis[16] = {'{','}','[',']','(',')', '-', '+', '*', '/', '=', ',', '<', '>', '.', ';'};
     int i;
     for(i = 0; i < 5; i++){
         if(separadores[i] == c){
@@ -97,9 +97,12 @@ void trata_composicao(char c, char* buf){
     int sep_next = verifica_separador(next);
             
     if(sep_next == SEPARADOR_UTIL && verifica_composicao(c, next)){
-        buf[0] = c; buf[1] = next; buf[2] = '\0';
+        buf[0] = c; 
+        buf[1] = next; 
+        buf[2] = '\0';
     } else {
-        buf[0] = c; buf[1] = '\0';
+        buf[0] = c;
+        buf[1] = '\0';
         caracter_buf = next;
     }
 }
@@ -134,6 +137,8 @@ Token eof_token(){
     eof.token[1] = '\0';
     return eof;
 }
+
+
 Token pegaProximoToken() {
     if(retorna_buf == 1){
         retorna_buf = 0;
@@ -176,9 +181,7 @@ Token pegaProximoToken() {
                 }
             }
         }
-
         int tipo_sep = verifica_separador(c);
-        
         if(tipo_sep == NAO_SEPARADOR){
             buf[buf_inc] = c;
             buf_inc++;
@@ -206,7 +209,6 @@ Token pegaProximoToken() {
             return to_return;
         } 
         else if(tipo_sep == SEPARADOR_UTIL && VAZIO_FLAG == 0) {
-            
             if(c == '.'){
                buf[buf_inc] = '\0';
                if (strcmp(analisarToken(buf), "INTEGER") == 0){
@@ -223,16 +225,20 @@ Token pegaProximoToken() {
                    buf_inc = 0;   
                    return to_return;
                }
-            } 
-            
-            buf[buf_inc] = '\0';   
-            atualiza_token(&to_return, buf, 1);
-            buf_inc = 0;   
-                    
+            }
             char buf_aux[3];
             trata_composicao(c, buf_aux);
             atualiza_token(&token_buf, buf_aux, 1);
             retorna_buf = 1;
+            
+            if(!buf_inc){
+                retorna_buf = 0;
+                return token_buf;
+            }
+            buf[buf_inc] = '\0';   
+            atualiza_token(&to_return, buf, 1);
+            buf_inc = 0;   
+                    
             return to_return;
         } 
         else if(tipo_sep == SEPARADOR_UTIL && VAZIO_FLAG == 1){

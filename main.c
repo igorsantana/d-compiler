@@ -4,22 +4,24 @@
 #include "estruturas.h"
 #include "lexico.h"
 #include "sintatico.h"
+#include "gerador-intermediario.h"
 
 int main(int argc, char** argv) {
-    
-//    char nomeArquivo[30] = {'e', 'e', '.', 'd'};
-//    FILE * arquivo;
-//    if ((arquivo = fopen(nomeArquivo, "r")) == NULL) {
-//        printf("Arquivo não encontrado!");
-//    }
-//    arquivo_leitura(arquivo);
 
-//    preditivoDescendente();
+    char nomeArquivo[30] = {'e', 'e', '.', 'd'};
+    FILE * arquivo;
+    if ((arquivo = fopen(nomeArquivo, "r")) == NULL) {
+        printf("Arquivo não encontrado!");
+    }
+    arquivo_leitura(arquivo);
+    Tree* arvore = preditivoDescendente();
+    gerador_intermediario(arvore);
+
     
-    Escopo*       lista  = create_escopo();
-//    
-    add_escopo(lista, "main",     0);
-    add_escopo(lista, "funcao_1", 1);
+//    Escopo*       lista  = create_escopo();
+////    
+//    add_escopo(lista, "main",     0);
+//    add_escopo(lista, "funcao_1", 1);
 //    add_escopo(lista, "funcao_2", 2);
 //    add_escopo(lista, "if"      , 3);
 //    
@@ -114,8 +116,6 @@ int main(int argc, char** argv) {
 //    add_item(raiz, &nome_4, variavel_3);
 //    
 //    add_item(raiz, &nome_5, variavel_3);
-//    
-
     
 //    Token x1 = getToken();
 //    Token x2 = getToken();
