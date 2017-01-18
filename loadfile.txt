@@ -22,6 +22,7 @@ if
 (
 )
 else
+while
 $
 
 Start
@@ -45,6 +46,7 @@ MulExpression
 MulExpression1
 PrimaryExpression
 VarDeclarations
+VarD1
 DeclaratorIdentifierList
 DeclaratorIdentifier
 VarDeclaratorIdentifier
@@ -58,6 +60,8 @@ IfExp
 ElseStatement
 IfCondition
 ScopeStatement
+WhileStatement
+WhileExp
 
 ; Start Statement
 ; Statement ;
@@ -155,7 +159,8 @@ int Statement NonEmptyStatement
 int StatementList Statement StatementList
 int NonEmptyStatement NonEmptyStatementNoCaseNoDefault
 int NonEmptyStatementNoCaseNoDefault VarDeclarations
-int VarDeclarations BasicTypeX DeclaratorIdentifierList ;
+int VarDeclarations VarD1 ;
+int VarD1 BasicTypeX DeclaratorIdentifierList
 int BasicTypeX int
 int ElseStatement lambda
 int ScopeStatement NonEmptyStatement
@@ -164,7 +169,8 @@ char Statement NonEmptyStatement
 char StatementList Statement StatementList
 char NonEmptyStatement NonEmptyStatementNoCaseNoDefault
 char NonEmptyStatementNoCaseNoDefault VarDeclarations
-char VarDeclarations BasicTypeX DeclaratorIdentifierList ;
+char VarDeclarations VarD1 ;
+char VarD1 BasicTypeX DeclaratorIdentifierList
 char BasicTypeX char
 char ElseStatement lambda
 char ScopeStatement NonEmptyStatement
@@ -173,7 +179,8 @@ float Statement NonEmptyStatement
 float StatementList Statement StatementList
 float NonEmptyStatement NonEmptyStatementNoCaseNoDefault
 float NonEmptyStatementNoCaseNoDefault VarDeclarations
-float VarDeclarations BasicTypeX DeclaratorIdentifierList ;
+float VarDeclarations VarD1 ;
+float VarD1 BasicTypeX DeclaratorIdentifierList
 float BasicTypeX float
 float ElseStatement lambda
 float ScopeStatement NonEmptyStatement
@@ -186,9 +193,18 @@ if IfStatement if IfExp ScopeStatement ElseStatement
 if ElseStatement lambda
 if ScopeStatement NonEmptyStatement
 ( IfExp ( IfCondition )
+( WhileExp ( Expression )
 ) AssignExpression1 lambda
 ) EqualExpression lambda
 ) AddExpression1 lambda
 ) MulExpression1 lambda
 else ElseStatement lambda
-$ ElseStatement lambda
+while Start Statement
+while Statement NonEmptyStatement
+while StatementList Statement StatementList
+while NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+while NonEmptyStatementNoCaseNoDefault WhileStatement
+while ElseStatement lambda
+while ScopeStatement NonEmptyStatement
+while WhileStatement while WhileExp ScopeStatement
+$ ElseStatement lambda 
