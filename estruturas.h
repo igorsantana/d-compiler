@@ -27,9 +27,9 @@ struct Tree          { Token token; Tree *pai; Tree *irmaos; Tree *filhos; };
 struct ItemLista     { Tree* el; ItemLista* irmao; int id; };
 
 struct ItemVariavel  { ItemVariavel*  proximo; ValorVariavel* primeiro; char* nome; };
-struct ValorVariavel { ValorVariavel* proximo; int profundidade; char* tipo; char* categoria; void* valor; };
+struct ValorVariavel { ValorVariavel* proximo; Escopo* escopo; char*temp; char* tipo; char* categoria; void* valor; ValorVariavel* anterior;};
 
-struct Escopo        { char* nome; int profundidade; Escopo* proximo; };
+struct Escopo        { char* nome; int profundidade; Escopo* proximo; Escopo* pai; };
 
 /* Funções relacionadas a pilha */   
 
@@ -56,17 +56,21 @@ ItemLista*  last_element(ItemLista*);
 ItemLista*  find_element(ItemLista* list);
 
 /* Funcoes relacionadas a lista da tabela de simbolos */
-ValorVariavel* create(int profundidade, char* tipo, char* categoria, void* valor);
+ValorVariavel* create(Escopo* escopo, char* tipo);
 ItemVariavel*  create_lista();
 void           print_variavel(ItemVariavel* raiz);
-void           add_variavel(ItemVariavel* raiz, char* nome);
+ItemVariavel*  add_variavel(ItemVariavel* raiz, char* nome);
 void           add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel);
-void*          get_valor(ItemVariavel* raiz, char* nome, int profundidade);
+ValorVariavel* get_valor(ItemVariavel* raiz, Escopo* escopo, char* nome_escopo, char* variavel);
+ItemVariavel*  get_variavel(ItemVariavel* raiz, char* variavel);
+ValorVariavel* encontra_escopo_declarado(ItemVariavel* raiz, Escopo* lista_escopo, char* nome_escopo, char* variavel);
+
+//void*          get_valor(ItemVariavel* raiz, char* nome, int profundidade);
 
 /* Funcoes relacionadas ao Escopo */
-Escopo* create_escopo();
-void    add_escopo(Escopo* raiz, char* nome, int profundidade);
-Escopo* get_escopo(Escopo* raiz, char* nome);
+Escopo*     create_escopo();
+Escopo*     add_escopo(Escopo* raiz, char* nome, int profundidade, Escopo* pai);
+Escopo*     get_escopo(Escopo* raiz, char* nome);
 
 #ifdef __cplusplus
 }

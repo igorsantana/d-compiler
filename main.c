@@ -22,21 +22,21 @@ void help(){
     printf("\t-v\tVerbose\tDurante a execução do programa, mostra na tela o que está acontecendo\n\n");
     exit(EXIT_SUCCESS);
 }
-void opcoes_entrada(int argc, char** argv){
-    int opt;
-    while((opt = getopt(argc, argv, "f:hv")) != -1){
-        switch(opt){
-            case 'f':
-                nomeArquivo = optarg;
-                break;
-            case 'h':
-                help();
-            case 'v':
-                VERBOSE_MODE = 1;
-                break;
-        }
-    }
-}
+//void opcoes_entrada(int argc, char** argv){
+//    int opt;
+//    while((opt = getopt(argc, argv, "f:hv")) != -1){
+//        switch(opt){
+//            case 'f':
+//                nomeArquivo = optarg;
+//                break;
+//            case 'h':
+//                help();
+//            case 'v':
+//                VERBOSE_MODE = 1;
+//                break;
+//        }
+//    }
+//}
 void escreve_assembly(char* arq_sem_extensao){
     FILE *entrada;
     char cmd[256];
@@ -73,52 +73,69 @@ void executa_assembly(char* arq_sem_extensao){
 
 int main(int argc, char** argv) {
     
-    opcoes_entrada(argc, argv);
-    char arq_no_extension[64]; strcpy(arq_no_extension, nomeArquivo);
+//    opcoes_entrada(argc, argv);
+//    char arq_no_extension[64]; strcpy(arq_no_extension, nomeArquivo);
     
-    arq_no_extension[strlen(nomeArquivo) -2] = 0;
+//    arq_no_extension[strlen(nomeArquivo) -2] = 0;
 
     FILE * arquivo;
-    if ((arquivo = fopen(nomeArquivo, "r")) == NULL) {
+    if ((arquivo = fopen("ee.d", "r")) == NULL) {
         printf("Arquivo não encontrado!");
     }
     
     arquivo_leitura(arquivo);
 //    Compilador
-    Tree* arvore = preditivoDescendente();
+//    Tree* arvore = preditivoDescendente();
     
-    gerador_intermediario(arvore);
+//    gerador_intermediario(arvore);
 //    Manipulação de Arquivos LLVM e Assembly
-    escreve_assembly(arq_no_extension);    
-    executa_assembly(arq_no_extension);
+//    escreve_assembly(arq_no_extension);    
+//    executa_assembly(arq_no_extension);
 
     
-//    Escopo*       lista  = create_escopo();
+    Escopo* lista  = create_escopo();
 ////    
-//    add_escopo(lista, "main",     0);
-//    add_escopo(lista, "funcao_1", 1);
-//    add_escopo(lista, "funcao_2", 2);
-//    add_escopo(lista, "if"      , 3);
+    Escopo* main = add_escopo(lista, "main", 0, NULL);
+    Escopo* f1   = add_escopo(lista, "funcao_1", 1, main);
+    Escopo* f2   = add_escopo(lista, "funcao_2", 1, f1);
+    Escopo* f3   = add_escopo(lista, "funcao_3", 1, f2);
+    Escopo* f4   = add_escopo(lista, "funcao_4", 1, f2);
 //    
-//    ItemVariavel* variaveis = create_lista();
+    ItemVariavel* variaveis = create_lista();
 //    
-//    add_variavel(variaveis, "a");
-//    add_variavel(variaveis, "b");
-//    add_variavel(variaveis, "c");
-//    add_variavel(variaveis, "d");
-//    
-//    add_item(variaveis, "a", create(0, "INTEGER", "VAR", (void*) 1));
-//    add_item(variaveis, "a", create(1, "INTEGER", "VAR", (void*) 4));
-//    add_item(variaveis, "a", create(2, "INTEGER", "VAR", (void*) 5));
-//    add_item(variaveis, "a", create(3, "INTEGER", "VAR", (void*) 7));
-//    
-//    add_item(variaveis, "b", create(3, "INTEGER", "VAR", (void*) 2));
-//    
-//    add_item(variaveis, "c", create(0, "STRING", "VAR", (void*) "TESTE 1"));
-//    add_item(variaveis, "c", create(3, "STRING", "VAR", (void*) "TESTE 2"));
-//    
-//    add_item(variaveis, "d", create(1, "INTEGER", "VAR", (void*) 7));
-//    add_item(variaveis, "d", create(3, "STRING",  "VAR", (void*) "TESTE 3"));
+    ItemVariavel* a = add_variavel(variaveis, "a");
+    ItemVariavel* b = add_variavel(variaveis, "b");
+    ItemVariavel* c = add_variavel(variaveis, "c");
+    
+    add_item(variaveis, "a", create(main, "INTEGER"));
+//    add_item(variaveis, "a", create(f1, "INTEGER"));
+    
+    add_item(variaveis, "b", create(main, "FLOAT"));
+//    add_item(variaveis, "b", create(f1, "STRING"));
+//    add_item(variaveis, "b", create(f2, "FLOAT"));
+    
+    add_item(variaveis, "c", create(f1, "VECTOR"));
+    
+    add_item(variaveis, "c", create(f3, "VECTOR"));
+    
+    add_item(variaveis, "a", create(f4, "VECTOR"));
+//    add_item(variaveis, "c", create(f2, "CHAR"));
+//    add_item(variaveis, "c", create(f2, "CHAR"));
+
+    ValorVariavel* v1 = encontra_escopo_declarado(variaveis, lista, "funcao_3", "a");
+    printf("%s\n", v1->escopo->nome);
+    
+//    ValorVariavel* r1 = get_valor(variaveis, lista, "funcao_1", "b");
+//    printf("%s\n", r1->tipo);
+//    printf("%s\n", c->primeiro->tipo);
+//    printf("%s\n", c->primeiro->escopo->nome);
+//    printf("%s\n", c->primeiro->proximo->tipo);
+//    printf("%s\n", c->primeiro->proximo->escopo->nome);
+//        printf("%s\n", b->primeiro->tipo);
+
+//    printf("%s\n", a->primeiro->tipo);
+    
+    
 //    
 //    int a = (int) get_valor(variaveis, "a", get_escopo(lista, "main")->profundidade);
 //    printf("Valor 1 = %i\n", a);
