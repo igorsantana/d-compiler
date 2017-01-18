@@ -1,6 +1,7 @@
-if(b){
-    int a ;
-    int b ;
-    b = 10 ;
-    a = 10 * b - 1;
+{
+    int a = 10;
+    while(a > 20){
+        a = a + 1;
+    }
+    
 }
