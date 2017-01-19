@@ -15,6 +15,7 @@
 %
 id
 _IntegerLiteral
+_StringLiteral
 int
 char
 float
@@ -23,6 +24,7 @@ if
 )
 else
 while
+,
 $
 
 Start
@@ -62,6 +64,9 @@ IfCondition
 ScopeStatement
 WhileStatement
 WhileExp
+FunctionCall
+Parameters
+ParametersList
 
 ; Start Statement
 ; Statement ;
@@ -124,7 +129,7 @@ id AndAndExpression CmpExpression
 id CmpExpression AddExpression EqualExpression
 id AddExpression MulExpression AddExpression1
 id MulExpression PrimaryExpression MulExpression1
-id PrimaryExpression id
+id PrimaryExpression FunctionCall
 id DeclaratorIdentifierList DeclaratorIdentifier
 id DeclaratorIdentifier VarDeclaratorIdentifier
 id VarDeclaratorIdentifier IdentifierDeclarator VarDeclaratorIdentifier1
@@ -134,6 +139,8 @@ id NonVoidInitializer AssignExpression
 id ElseStatement lambda
 id IfCondition Expression
 id ScopeStatement NonEmptyStatement
+id FunctionCall id ( Parameters )
+id Parameters Expression ParametersList
 _IntegerLiteral Start Statement
 _IntegerLiteral Statement NonEmptyStatement
 _IntegerLiteral StatementList Statement StatementList
@@ -154,6 +161,28 @@ _IntegerLiteral NonVoidInitializer AssignExpression
 _IntegerLiteral ElseStatement lambda
 _IntegerLiteral IfCondition Expression
 _IntegerLiteral ScopeStatement NonEmptyStatement
+_IntegerLiteral Parameters Expression ParametersList
+_StringLiteral Start Statement
+_StringLiteral Statement NonEmptyStatement
+_StringLiteral StatementList Statement StatementList
+_StringLiteral NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+_StringLiteral NonEmptyStatementNoCaseNoDefault ExpressionStatement
+_StringLiteral ExpressionStatement Expression ;
+_StringLiteral Expression CommaExpression
+_StringLiteral CommaExpression AssignExpression
+_StringLiteral AssignExpression OrOrExpression AssignExpression1
+_StringLiteral OrOrExpression AndAndExpression
+_StringLiteral AndAndExpression CmpExpression
+_StringLiteral CmpExpression AddExpression EqualExpression
+_StringLiteral AddExpression MulExpression AddExpression1
+_StringLiteral MulExpression PrimaryExpression MulExpression1
+_StringLiteral PrimaryExpression _StringLiteral
+_StringLiteral Initializer NonVoidInitializer
+_StringLiteral NonVoidInitializer AssignExpression
+_StringLiteral ElseStatement lambda
+_StringLiteral IfCondition Expression
+_StringLiteral ScopeStatement NonEmptyStatement
+_StringLiteral Parameters Expression ParametersList
 int Start Statement
 int Statement NonEmptyStatement
 int StatementList Statement StatementList
@@ -198,6 +227,8 @@ if ScopeStatement NonEmptyStatement
 ) EqualExpression lambda
 ) AddExpression1 lambda
 ) MulExpression1 lambda
+) Parameters lambda
+) ParametersList lambda
 else ElseStatement lambda
 while Start Statement
 while Statement NonEmptyStatement
@@ -207,4 +238,9 @@ while NonEmptyStatementNoCaseNoDefault WhileStatement
 while ElseStatement lambda
 while ScopeStatement NonEmptyStatement
 while WhileStatement while WhileExp ScopeStatement
-$ ElseStatement lambda 
+, AssignExpression1 lambda
+, EqualExpression lambda
+, AddExpression1 lambda
+, MulExpression1 lambda
+, ParametersList , Expression ParametersList
+$ ElseStatement lambda
