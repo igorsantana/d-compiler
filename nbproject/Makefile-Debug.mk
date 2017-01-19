@@ -40,6 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/gerador-intermediario.o \
 	${OBJECTDIR}/lexico.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/semantico.o \
 	${OBJECTDIR}/sintatico.o \
 	${OBJECTDIR}/tabelapreditiva.o
 
@@ -92,6 +93,11 @@ ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/semantico.o: semantico.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/semantico.o semantico.c
 
 ${OBJECTDIR}/sintatico.o: sintatico.c
 	${MKDIR} -p ${OBJECTDIR}
