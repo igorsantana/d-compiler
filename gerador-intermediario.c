@@ -262,9 +262,11 @@ char* gera_loop(Tree* no) {
 }
 
 char* gera_write(Tree* no) {
-//    no = no->filhos;
-//    Tree* exp_tree = no->filhos;
-//    
+      //call i32 (i8*, ...)* @printf(i8* %msg, i32 12, i8 42)
+    
+    no = no->filhos;
+    Tree* exp_tree = no->filhos;
+    printf("write: %s", exp_tree->token);
 //    char* exp_rst = analisa_funcao(exp_tree);
 //    printf("");
 //    
