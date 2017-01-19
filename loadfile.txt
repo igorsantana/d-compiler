@@ -13,9 +13,9 @@
 *
 /
 %
-id
 _IntegerLiteral
 _StringLiteral
+id
 int
 char
 float
@@ -47,6 +47,7 @@ AddExpression1
 MulExpression
 MulExpression1
 PrimaryExpression
+Identifier
 VarDeclarations
 VarD1
 DeclaratorIdentifierList
@@ -66,7 +67,7 @@ WhileStatement
 WhileExp
 FunctionCall
 Parameters
-ParametersList
+ParameterList
 
 ; Start Statement
 ; Statement ;
@@ -77,6 +78,7 @@ ParametersList
 ; MulExpression1 lambda
 ; VarDeclaratorIdentifier1 lambda
 ; ElseStatement lambda
+; FunctionCall lambda
 { Start Statement
 { Statement BlockStatement
 { BlockStatement { StatementList }
@@ -90,57 +92,43 @@ ParametersList
 = AddExpression1 lambda
 = MulExpression1 lambda
 = VarDeclaratorIdentifier1 = Initializer
+= FunctionCall lambda
 == EqualExpression == AddExpression
 == AddExpression1 lambda
 == MulExpression1 lambda
+== FunctionCall lambda
 != EqualExpression != AddExpression
 != AddExpression1 lambda
 != MulExpression1 lambda
+!= FunctionCall lambda
 < EqualExpression < AddExpression
 < AddExpression1 lambda
 < MulExpression1 lambda
+< FunctionCall lambda
 <= EqualExpression <= AddExpression
 <= AddExpression1 lambda
 <= MulExpression1 lambda
+<= FunctionCall lambda
 > EqualExpression > AddExpression
 > AddExpression1 lambda
 > MulExpression1 lambda
+> FunctionCall lambda
 >= EqualExpression >= AddExpression
 >= AddExpression1 lambda
 >= MulExpression1 lambda
+>= FunctionCall lambda
 + AddExpression1 + MulExpression AddExpression1
 + MulExpression1 lambda
++ FunctionCall lambda
 - AddExpression1 - MulExpression AddExpression1
 - MulExpression1 lambda
+- FunctionCall lambda
 * MulExpression1 * PrimaryExpression MulExpression1
+* FunctionCall lambda
 / MulExpression1 / PrimaryExpression MulExpression1
+/ FunctionCall lambda
 % MulExpression1 % PrimaryExpression MulExpression1
-id Start Statement
-id Statement NonEmptyStatement
-id StatementList Statement StatementList
-id NonEmptyStatement NonEmptyStatementNoCaseNoDefault
-id NonEmptyStatementNoCaseNoDefault ExpressionStatement
-id ExpressionStatement Expression ;
-id Expression CommaExpression
-id CommaExpression AssignExpression
-id AssignExpression OrOrExpression AssignExpression1
-id OrOrExpression AndAndExpression
-id AndAndExpression CmpExpression
-id CmpExpression AddExpression EqualExpression
-id AddExpression MulExpression AddExpression1
-id MulExpression PrimaryExpression MulExpression1
-id PrimaryExpression FunctionCall
-id DeclaratorIdentifierList DeclaratorIdentifier
-id DeclaratorIdentifier VarDeclaratorIdentifier
-id VarDeclaratorIdentifier IdentifierDeclarator VarDeclaratorIdentifier1
-id IdentifierDeclarator id
-id Initializer NonVoidInitializer
-id NonVoidInitializer AssignExpression
-id ElseStatement lambda
-id IfCondition Expression
-id ScopeStatement NonEmptyStatement
-id FunctionCall id ( Parameters )
-id Parameters Expression ParametersList
+% FunctionCall lambda
 _IntegerLiteral Start Statement
 _IntegerLiteral Statement NonEmptyStatement
 _IntegerLiteral StatementList Statement StatementList
@@ -161,7 +149,7 @@ _IntegerLiteral NonVoidInitializer AssignExpression
 _IntegerLiteral ElseStatement lambda
 _IntegerLiteral IfCondition Expression
 _IntegerLiteral ScopeStatement NonEmptyStatement
-_IntegerLiteral Parameters Expression ParametersList
+_IntegerLiteral Parameters Expression ParameterList
 _StringLiteral Start Statement
 _StringLiteral Statement NonEmptyStatement
 _StringLiteral StatementList Statement StatementList
@@ -182,7 +170,33 @@ _StringLiteral NonVoidInitializer AssignExpression
 _StringLiteral ElseStatement lambda
 _StringLiteral IfCondition Expression
 _StringLiteral ScopeStatement NonEmptyStatement
-_StringLiteral Parameters Expression ParametersList
+_StringLiteral Parameters Expression ParameterList
+id Start Statement
+id Statement NonEmptyStatement
+id StatementList Statement StatementList
+id NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+id NonEmptyStatementNoCaseNoDefault ExpressionStatement
+id ExpressionStatement Expression ;
+id Expression CommaExpression
+id CommaExpression AssignExpression
+id AssignExpression OrOrExpression AssignExpression1
+id OrOrExpression AndAndExpression
+id AndAndExpression CmpExpression
+id CmpExpression AddExpression EqualExpression
+id AddExpression MulExpression AddExpression1
+id MulExpression PrimaryExpression MulExpression1
+id PrimaryExpression Identifier
+id Identifier id FunctionCall
+id DeclaratorIdentifierList DeclaratorIdentifier
+id DeclaratorIdentifier VarDeclaratorIdentifier
+id VarDeclaratorIdentifier IdentifierDeclarator VarDeclaratorIdentifier1
+id IdentifierDeclarator id
+id Initializer NonVoidInitializer
+id NonVoidInitializer AssignExpression
+id ElseStatement lambda
+id IfCondition Expression
+id ScopeStatement NonEmptyStatement
+id Parameters Expression ParameterList
 int Start Statement
 int Statement NonEmptyStatement
 int StatementList Statement StatementList
@@ -223,12 +237,14 @@ if ElseStatement lambda
 if ScopeStatement NonEmptyStatement
 ( IfExp ( IfCondition )
 ( WhileExp ( Expression )
+( FunctionCall ( Parameters )
 ) AssignExpression1 lambda
 ) EqualExpression lambda
 ) AddExpression1 lambda
 ) MulExpression1 lambda
+) FunctionCall lambda
 ) Parameters lambda
-) ParametersList lambda
+) ParameterList lambda
 else ElseStatement lambda
 while Start Statement
 while Statement NonEmptyStatement
@@ -242,5 +258,6 @@ while WhileStatement while WhileExp ScopeStatement
 , EqualExpression lambda
 , AddExpression1 lambda
 , MulExpression1 lambda
-, ParametersList , Expression ParametersList
+, FunctionCall lambda
+, ParameterList , Expression ParameterList
 $ ElseStatement lambda
