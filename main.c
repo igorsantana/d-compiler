@@ -71,6 +71,16 @@ void executa_assembly(char* arq_sem_extensao){
     
 }
 
+
+Token token(char* categoria, char* token){
+    Token t;
+    t.coluna    = -1;
+    t.linha     = -1;
+    t.categoria = categoria;
+    strcpy(t.token, token);
+    return t;
+}
+
 int main(int argc, char** argv) {
     
 //    opcoes_entrada(argc, argv);
@@ -84,56 +94,65 @@ int main(int argc, char** argv) {
     }
     
     arquivo_leitura(arquivo);
-//    Compilador
+//    "PALAVRA_RESERVADA";
+//    "SIMBOLO";
+//    "id";
+//    "STRING";
+//    "_IntegerLiteral";
+//    "CARACTER";
+//    "PONTO_FLUTUANTE";
+    
 //    Tree* arvore = preditivoDescendente();
+      Tree* raiz = create_tree(NULL, token("SIMBOLO", "{"));
+      add_son(raiz, token("SIMBOLO", ";"));
+      add_son(raiz, token("SIMBOLO", "}"));
+      Tree* filho1 = raiz->filhos;
+      add_son(filho1, token("PALAVRA_RESERVADA", "int"));
+      add_son(filho1, token("PALAVRA_RESERVADA", "if"));
+      Tree* neto1  = filho1->filhos;
+      Tree* neto2  = filho1->filhos->irmaos;
+      add_son(neto1, token("SIMBOLO", "="));
+      add_son(neto2, token("SIMBOLO", "("));
+      add_son(neto2, token("SIMBOLO", "{"));
+      Tree* bisneto1  = neto1->filhos;
+      Tree* bisneto2  = neto2->filhos;
+      Tree* bisneto3  = neto2->filhos->irmaos;
+      add_son(bisneto1, token("id", "a"));
+      add_son(bisneto1, token("_IntegerLiteral", "10"));
+      add_son(bisneto2, token("id", "a'"));
+      add_son(bisneto2, token("SIMBOLO", ")"));
+      add_son(bisneto3, token("SIMBOLO", ";'"));
+      add_son(bisneto3, token("SIMBOLO", "}"));
+      Tree* tataraneto1 = bisneto3->filhos;
+      add_son(tataraneto1, token("PALAVRA_RESERVADA", "int"));
+      Tree* tatataraneto1 = tataraneto1->filhos;
+      add_son(tatataraneto1, token("SIMBOLO", "="));
+      Tree* tatatataraneto1 = tatataraneto1->filhos;
+      add_son(tatatataraneto1, token("id", "a"));
+      add_son(tatatataraneto1, token("_IntegerLiteral", "10"));
+        executa_semantico(raiz);
     
 //    gerador_intermediario(arvore);
-//    Manipulação de Arquivos LLVM e Assembly
-//    escreve_assembly(arq_no_extension);    
-//    executa_assembly(arq_no_extension);
 
-    
-    Escopo* lista  = create_escopo();
-////    
-    Escopo* main = add_escopo(lista, "main", 0, NULL);
-    Escopo* f1   = add_escopo(lista, "funcao_1", 1, main);
-    Escopo* f2   = add_escopo(lista, "funcao_2", 1, f1);
-    Escopo* f3   = add_escopo(lista, "funcao_3", 1, f2);
-    Escopo* f4   = add_escopo(lista, "funcao_4", 1, f2);
+//    Escopo* lista  = create_escopo();
+//    Escopo* main = add_escopo(lista, "main", 0, NULL);
+//    Escopo* f1   = add_escopo(lista, "funcao_1", 1, main);
+//    Escopo* f2   = add_escopo(lista, "funcao_2", 1, f1);
+//    Escopo* f3   = add_escopo(lista, "funcao_3", 1, f2);
+//    Escopo* f4   = add_escopo(lista, "funcao_4", 1, f2);
+//    ItemVariavel* variaveis = create_lista();   
+//    ItemVariavel* a = add_variavel(variaveis, "a");
+//    ItemVariavel* b = add_variavel(variaveis, "b");
+//    ItemVariavel* c = add_variavel(variaveis, "c");
 //    
-    ItemVariavel* variaveis = create_lista();
-//    
-    ItemVariavel* a = add_variavel(variaveis, "a");
-    ItemVariavel* b = add_variavel(variaveis, "b");
-    ItemVariavel* c = add_variavel(variaveis, "c");
-    
-    add_item(variaveis, "a", create(main, "INTEGER"));
-//    add_item(variaveis, "a", create(f1, "INTEGER"));
-    
-    add_item(variaveis, "b", create(main, "FLOAT"));
-//    add_item(variaveis, "b", create(f1, "STRING"));
-//    add_item(variaveis, "b", create(f2, "FLOAT"));
-    
-    add_item(variaveis, "c", create(f1, "VECTOR"));
-    
-    add_item(variaveis, "c", create(f3, "VECTOR"));
-    
-    add_item(variaveis, "a", create(f4, "VECTOR"));
-//    add_item(variaveis, "c", create(f2, "CHAR"));
-//    add_item(variaveis, "c", create(f2, "CHAR"));
-
-    ValorVariavel* v1 = encontra_escopo_declarado(variaveis, lista, "funcao_3", "a");
-    printf("%s\n", v1->escopo->nome);
-    
-//    ValorVariavel* r1 = get_valor(variaveis, lista, "funcao_1", "b");
-//    printf("%s\n", r1->tipo);
-//    printf("%s\n", c->primeiro->tipo);
-//    printf("%s\n", c->primeiro->escopo->nome);
-//    printf("%s\n", c->primeiro->proximo->tipo);
-//    printf("%s\n", c->primeiro->proximo->escopo->nome);
-//        printf("%s\n", b->primeiro->tipo);
-
-//    printf("%s\n", a->primeiro->tipo);
+//    add_item(variaveis, "a", create(main, "INTEGER"));
+//    add_item(variaveis, "b", create(main, "FLOAT"));
+//    add_item(variaveis, "c", create(f1, "VECTOR"));
+//    add_item(variaveis, "c", create(f3, "VECTOR"));
+//    add_item(variaveis, "a", create(f4, "VECTOR"));
+//
+//    ValorVariavel* v1 = encontra_escopo_declarado(variaveis, lista, "funcao_3", "a");
+//    printf("%s\n", v1->escopo->nome);
     
     
 //    

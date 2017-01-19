@@ -35,9 +35,13 @@ char* gera_declaracao(Tree* no);
 char* gera_atribuicao(Tree* no);
 char* gera_id(Tree* no);
 char* gera_if(Tree* no);
+char* gera_comparacao(Tree* no);
+char* gera_loop(Tree* no);
+char* gera_write(Tree* no);
 //Funções auxiliares para geração de codigo
 char* gera_operador(char str);
 char* gerar_if_label();
+char* gerar_loop_label();
 char* gerar_variavel();
 char* gerar_rotulo(int* contador, char* label);
 char* concat_str(char* des, char* src);
@@ -45,7 +49,6 @@ char* comando_comp_LLVM(char * str);
 
 int gerador_intermediario(Tree* arvore) {
     analisa_funcao(arvore);
-
     return 1;
 }
 
@@ -71,6 +74,15 @@ char* analisa_funcao(Tree* no) {
     if (!strcmp(no->token.token, "if")) {
         return gera_if(no);
     }
+    if(eh_comparacao(no)){
+        return gera_comparacao(no);
+    }
+    if (!strcmp(no->token.token, "while")){
+        return gera_loop(no);
+    }
+    if (!strcmp(no->token.token, "writeln")){
+        return gera_write(no);
+    }
 
     return no->token.token;
 }
@@ -93,6 +105,16 @@ int eh_operacao(Token* tok) {
         }
     }
 
+    return 0;
+}
+
+int eh_comparacao(Token* tok){
+    char simbolos[6][5] = {"==", "!=", ">",">=","<","<="};
+    for (int i = 0; i < 6; i++) {
+        if (!strcmp(simbolos[i], tok->token)) {
+            return 1;
+        }
+    }
     return 0;
 }
 
@@ -198,18 +220,59 @@ char* gera_if(Tree* no) {
     Tree* exp_tree = no->filhos;
     char* exp_rst = analisa_funcao(exp_tree);
     char* if_label = gerar_if_label();
-    char * comando_cmp = comando_comp_LLVM(exp_rst);
-    char cond[100];
-
-    sprintf(cond, "%s = %s i32 %s %s", "%cond", comando_cmp, "%T0", "1");
-    printf("%s\n", cond);
-    printf("br i1 %s, label %_t_%s, label %_end_%s\n_t_%s:\n", "%cond", if_label, if_label, if_label);
+    
+    
+    
+    printf("br i1 %s, label %_t_%s, label %_end_%s\n_t_%s:\n", exp_rst, if_label, if_label, if_label);
     no = no->irmaos;
     analisa_funcao(no);
     printf("br label %_end_%s\n_end_%s:", if_label, if_label);
     return NULL;
 
+}
 
+char* gera_comparacao(Tree* no){
+    char * comando_cmp = comando_comp_LLVM(no->token.token);
+    no = no->filhos;
+    char* esquerda = analisa_funcao(no);
+    no = no->irmaos;
+    char* direita = analisa_funcao(no);
+    char* ret = gerar_variavel();
+    printf("%s = icmp %s i32 %s %s\n", ret, comando_cmp, esquerda, direita);
+    return ret;
+}
+
+char* gera_loop(Tree* no) {
+    no = no->filhos;
+    Tree* exp_tree = no->filhos;
+    char * label1 = gerar_loop_label();
+    char * label2 = gerar_loop_label();
+    char * label3 = gerar_loop_label();
+    char cond[100];
+    
+    printf("_%s\n", label1);
+    char* exp_rst = analisa_funcao(exp_tree);
+    printf("br i1 %s, label %_%s, label %_%s\n", exp_rst, label2, label3);
+    printf("_%s\n", label2);
+    no = no->irmaos;
+    analisa_funcao(no);
+    printf("br label %_%s\n", label1);
+    printf("_%s\n", label3);
+    return NULL;
+}
+
+char* gera_write(Tree* no) {
+//    no = no->filhos;
+//    Tree* exp_tree = no->filhos;
+//    
+//    char* exp_rst = analisa_funcao(exp_tree);
+//    printf("");
+//    
+//    no = no->irmaos;
+//    analisa_funcao(no);
+//    printf("br label %_%s\n", label1);
+//    printf("_%s\n", label3);
+    return NULL;
 }
 
 char* gera_operador(char str) {
@@ -229,6 +292,11 @@ char* gera_operador(char str) {
 
 char* gerar_if_label() {
     char* var = gerar_rotulo(&contador_label, "if_");
+    return var;
+}
+
+char* gerar_loop_label() {
+    char* var = gerar_rotulo(&contador_label, "loop_");
     return var;
 }
 

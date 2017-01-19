@@ -207,7 +207,7 @@ void add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel) {
 
 ItemVariavel* get_variavel(ItemVariavel* raiz, char* variavel) {
     ItemVariavel* index = raiz;
-    while(index != NULL) {
+    while(index->nome != NULL) {
         if (strcmp(index->nome, variavel) == 0) {
             return index;
         }
@@ -287,15 +287,17 @@ Escopo* get_escopo(Escopo* raiz, char* nome);
 Escopo* create_escopo() {
     Escopo* to_return = malloc(sizeof (Escopo));
             to_return->profundidade = 0;
+            to_return->nome         = NULL;
             to_return->pai          = NULL;
             to_return->proximo      = NULL;
     return  to_return;
 }
 
 Escopo* add_escopo(Escopo* raiz, char* nome, int profundidade, Escopo* pai) {
-    if ((raiz->nome == NULL) && (raiz->profundidade == 0)) {
-        raiz->nome = nome;
+    if ((raiz->nome == NULL)) {
+        raiz->nome         = nome;
         raiz->profundidade = profundidade;
+        raiz->pai          = NULL;
         return raiz;
     }
     
@@ -308,7 +310,7 @@ Escopo* add_escopo(Escopo* raiz, char* nome, int profundidade, Escopo* pai) {
     for (current = raiz; current->proximo != NULL; current = current->proximo);
     current->proximo = novo;
     
-    return novo;
+    return current->proximo;
 }
 
 Escopo* get_escopo(Escopo* raiz, char* nome) {
