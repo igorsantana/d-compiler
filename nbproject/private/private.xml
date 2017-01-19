@@ -6,6 +6,12 @@
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/rafael/Área%20de%20Trabalho/Compilador/trabalho/d-compiler/lexico.c</file>
+            <file>file:/home/rafael/Área%20de%20Trabalho/Compilador/trabalho/d-compiler/sintatico.c</file>
+            <file>file:/home/rafael/Área%20de%20Trabalho/Compilador/trabalho/d-compiler/gerador-intermediario.c</file>
+            <file>file:/home/rafael/Área%20de%20Trabalho/Compilador/trabalho/d-compiler/ee.d</file>
+            <file>file:/home/rafael/Área%20de%20Trabalho/Compilador/trabalho/d-compiler/automato.c</file>
+        </group>
     </open-files>
 </project-private>
