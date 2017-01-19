@@ -3,34 +3,58 @@
 #include <string.h>
 #include "estruturas.h"
 
-int inc_escopo = 0;
+int             inc_escopo = 0;
+Escopo*         raiz_escopo;
+ItemVariavel*   raiz_variavel;
 
-Tree* executa_semantico(Tree* arvore);
-char* get_nome_escopo();
+Tree*   executa_semantico(Tree* arvore);
+char*   get_nome_escopo();
+void    analisa_arvore(Tree* arvore, Escopo* pai);
+int     get_escopo_atual();
+
+int get_escopo_atual(){
+    int atual = inc_escopo;
+    inc_escopo++;
+    return atual;
+}
 
 Tree* executa_semantico(Tree* arvore) {
-    Escopo*       raiz_escopo   = create_escopo();
-    ItemVariavel* raiz_variavel = create_lista();
     
-    printf("%s\n", get_nome_escopo());
-    printf("%s\n", get_nome_escopo());
-    
+    raiz_escopo     = create_escopo();
+    raiz_variavel   = create_lista();
+    analisa_arvore(arvore, NULL);
     return arvore;
 }
 
-void analisa_arvore(Tree* arvore) {
+void analisa_arvore(Tree* arvore, Escopo* pai) {
+    Escopo* current = pai;
     if (strcmp(arvore->token.token, "{") == 0) {
-        printf("ESCOPO");
+        current = add_escopo(raiz_escopo, get_nome_escopo(), -1, pai);
     }
     if (strcmp(arvore->token.token, "=") == 0) {
-        printf("ATRIBUICAO");
+        if(raiz_variavel->nome == NULL){
+            raiz_variavel->nome = arvore->filhos->token.token;
+        }
+        ItemVariavel* v = get_variavel(raiz_variavel, arvore->filhos->token.token);
+        if(v == NULL){
+            add_variavel(raiz_variavel, arvore->filhos->token.token);
+        }
+        add_item(raiz_variavel, arvore->filhos->token.token,
+        create(current, arvore->pai->token.categoria));
+    }
+    if(arvore->filhos != NULL){
+        analisa_arvore(arvore->filhos, current);
+    }
+    if(arvore->irmaos != NULL){
+        analisa_arvore(arvore->irmaos, current);
     }
     
 }
 
 char* get_nome_escopo() {
     char* to_return;
-    sprintf(to_return, "scope%i", inc_escopo);
-    inc_escopo++;
+    to_return = malloc(32);
+    snprintf(to_return,32, "%s_%i","scope", get_escopo_atual());
+    
     return to_return;
 }

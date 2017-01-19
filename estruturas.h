@@ -59,7 +59,7 @@ ItemLista*  find_element(ItemLista* list);
 ValorVariavel* create(Escopo* escopo, char* tipo);
 ItemVariavel*  create_lista();
 void           print_variavel(ItemVariavel* raiz);
-ItemVariavel*  add_variavel(ItemVariavel* raiz, char* nome);
+void           add_variavel(ItemVariavel* raiz, char* nome) ;
 void           add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel);
 ValorVariavel* get_valor(ItemVariavel* raiz, Escopo* escopo, char* nome_escopo, char* variavel);
 ItemVariavel*  get_variavel(ItemVariavel* raiz, char* variavel);

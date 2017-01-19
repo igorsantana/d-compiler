@@ -133,7 +133,7 @@ ItemLista* find_leafs(Tree* root, int* number) {
 ValorVariavel* create(Escopo* escopo, char* tipo);
 ItemVariavel*  create_lista();
 void           print_variavel(ItemVariavel* raiz);
-ItemVariavel*  add_variavel(ItemVariavel* raiz, char* nome);
+void            add_variavel(ItemVariavel* raiz, char* nome) ;
 void           add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel);
 //void*          get_valor(ItemVariavel* raiz, char* nome, int profundidade);
 ValorVariavel* get_valor(ItemVariavel* raiz, Escopo* escopo, char* nome_escopo, char* variavel);
@@ -153,6 +153,7 @@ ItemVariavel* create_lista() {
     ItemVariavel* to_return = malloc(sizeof(ItemVariavel));
                   to_return->primeiro       = NULL;
                   to_return->proximo        = NULL;
+                  to_return->nome           = NULL;
     return to_return;
 }
 
@@ -163,11 +164,7 @@ void print_variavel(ItemVariavel* raiz) {
     }
 }
 
-ItemVariavel* add_variavel(ItemVariavel* raiz, char* nome) {
-    if (raiz->nome == NULL) {
-        raiz->nome = nome;
-        return raiz;
-    }
+void add_variavel(ItemVariavel* raiz, char* nome) {
     
     ItemVariavel* current = raiz;
     while (current->proximo != NULL) {
@@ -175,8 +172,6 @@ ItemVariavel* add_variavel(ItemVariavel* raiz, char* nome) {
     }
     current->proximo = create_lista();
     current->proximo->nome = nome;
-    return current->proximo;
- 
 }
 
 void add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel) {
@@ -190,7 +185,6 @@ void add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel) {
     }
     
     if (index != NULL) {
-
         ValorVariavel* current = index->primeiro;
         if (current == NULL) {
            index->primeiro = variavel;
@@ -287,15 +281,17 @@ Escopo* get_escopo(Escopo* raiz, char* nome);
 Escopo* create_escopo() {
     Escopo* to_return = malloc(sizeof (Escopo));
             to_return->profundidade = 0;
+            to_return->nome         = NULL;
             to_return->pai          = NULL;
             to_return->proximo      = NULL;
     return  to_return;
 }
 
 Escopo* add_escopo(Escopo* raiz, char* nome, int profundidade, Escopo* pai) {
-    if ((raiz->nome == NULL) && (raiz->profundidade == 0)) {
-        raiz->nome = nome;
+    if ((raiz->nome == NULL)) {
+        raiz->nome         = nome;
         raiz->profundidade = profundidade;
+        raiz->pai          = NULL;
         return raiz;
     }
     
@@ -308,7 +304,7 @@ Escopo* add_escopo(Escopo* raiz, char* nome, int profundidade, Escopo* pai) {
     for (current = raiz; current->proximo != NULL; current = current->proximo);
     current->proximo = novo;
     
-    return novo;
+    return current->proximo;
 }
 
 Escopo* get_escopo(Escopo* raiz, char* nome) {
@@ -440,12 +436,12 @@ int reduce_tree(Tree* root) {
         atual = atual->irmao;
     }
     atual = folhas;
-    printf("\n\n");
+//    printf("\n\n");
     while (atual != NULL) {
-        printf("%s-%s\n", atual->el->token.token, atual->el->token.categoria);
+//        printf("%s-%s\n", atual->el->token.token, atual->el->token.categoria);
         atual = atual->irmao;
     }
-    printf("\n\n");
+//    printf("\n\n");
 
 
     while (new_size) {
