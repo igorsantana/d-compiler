@@ -15,6 +15,7 @@
 %
 id
 _IntegerLiteral
+_StringLiteral
 int
 char
 float
@@ -154,6 +155,26 @@ _IntegerLiteral NonVoidInitializer AssignExpression
 _IntegerLiteral ElseStatement lambda
 _IntegerLiteral IfCondition Expression
 _IntegerLiteral ScopeStatement NonEmptyStatement
+_StringLiteral Start Statement
+_StringLiteral Statement NonEmptyStatement
+_StringLiteral StatementList Statement StatementList
+_StringLiteral NonEmptyStatement NonEmptyStatementNoCaseNoDefault
+_StringLiteral NonEmptyStatementNoCaseNoDefault ExpressionStatement
+_StringLiteral ExpressionStatement Expression ;
+_StringLiteral Expression CommaExpression
+_StringLiteral CommaExpression AssignExpression
+_StringLiteral AssignExpression OrOrExpression AssignExpression1
+_StringLiteral OrOrExpression AndAndExpression
+_StringLiteral AndAndExpression CmpExpression
+_StringLiteral CmpExpression AddExpression EqualExpression
+_StringLiteral AddExpression MulExpression AddExpression1
+_StringLiteral MulExpression PrimaryExpression MulExpression1
+_StringLiteral PrimaryExpression _StringLiteral
+_StringLiteral Initializer NonVoidInitializer
+_StringLiteral NonVoidInitializer AssignExpression
+_StringLiteral ElseStatement lambda
+_StringLiteral IfCondition Expression
+_StringLiteral ScopeStatement NonEmptyStatement
 int Start Statement
 int Statement NonEmptyStatement
 int StatementList Statement StatementList
@@ -207,4 +228,4 @@ while NonEmptyStatementNoCaseNoDefault WhileStatement
 while ElseStatement lambda
 while ScopeStatement NonEmptyStatement
 while WhileStatement while WhileExp ScopeStatement
-$ ElseStatement lambda 
+$ ElseStatement lambda

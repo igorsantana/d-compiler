@@ -38,7 +38,7 @@ Tree* preditivoDescendente() {
     arvore = criaArvore(arvore, X->c, NAO_TERMINAL);
 
     while (strcmp(X->c, "$")) {
-//        printf("\n%s| |%s|\n",X->c,a.token);
+        printf("\n%s| |%s|\n",X->c,a.token);
 //        printf("1\n");
         if (!strcmp("lambda", X->c)) {
 //        printf("2\n");
@@ -60,12 +60,12 @@ Tree* preditivoDescendente() {
         } else if (matrizPreditiva[indexX][indexA].indexCaracter > 0) {
 //        printf("4\n");
             desempilha(&p);
-//            printf("\n\t empilha->");
+            printf("\n\t empilha->");
             for (int i = matrizPreditiva[indexX][indexA].indexCaracter - 1; i >= 0; i--) {
-//                printf("%s|",matrizPreditiva[indexX][indexA].caracteres[i].c);
+                printf("%s|",matrizPreditiva[indexX][indexA].caracteres[i].c);
                 empilha(&p, matrizPreditiva[indexX][indexA].caracteres[i].c);
             }
-//            printf("\n");
+            printf("\n");
             for (int i = 0; i < matrizPreditiva[indexX][indexA].indexCaracter; i++) {
                 arvore = adicionaFilhoLabel(arvore,matrizPreditiva[indexX][indexA].caracteres[i].c,NAO_TERMINAL);
             }
