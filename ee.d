@@ -1,1 +1,2 @@
-writeln("teste", 1, 2, 6, 5, 7, 2, 5, 6);
+writeln("teste%d", 1, 3);
+writeln("tteswa");

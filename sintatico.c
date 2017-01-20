@@ -80,10 +80,9 @@ Tree* preditivoDescendente() {
     
     arvore = voltaTopo(arvore);
 //        printf("8\n");
-    printaArvore(arvore);
+//    printaArvore(arvore);
     printf("\n\n\n");
     reduce_tree(arvore);
-    
     printaArvore(arvore);
     
     return arvore;
@@ -211,7 +210,7 @@ void printaArvore(Tree* arvore){
     printf("\n");
     atual = arvore->filhos;
     while(atual != NULL){
-        printaArvore(atual);
+//        printaArvore(atual);
         atual = atual->irmaos;
     }
     

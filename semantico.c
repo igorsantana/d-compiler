@@ -6,11 +6,17 @@
 int             inc_escopo = 0;
 Escopo*         raiz_escopo;
 ItemVariavel*   raiz_variavel;
+char*           prints[5];
+int             contador_print;
+
 
 Tree*   executa_semantico(Tree* arvore);
 char*   get_nome_escopo();
 void    analisa_arvore(Tree* arvore, Escopo* pai);
 int     get_escopo_atual();
+void    erro_declaracao(Tree* arvore);
+void    atribuicao(Tree* arvore, Escopo* current);
+void    declaracao(Tree* arvore, Escopo* current);
 
 int get_escopo_atual(){
     int atual = inc_escopo;
@@ -19,7 +25,6 @@ int get_escopo_atual(){
 }
 
 Tree* executa_semantico(Tree* arvore) {
-    
     raiz_escopo     = create_escopo();
     raiz_variavel   = create_lista();
     analisa_arvore(arvore, NULL);
@@ -80,6 +85,16 @@ void analisa_arvore(Tree* arvore, Escopo* pai) {
             atribuicao(arvore, current);
         }
     }
+    if(strcmp(arvore->token.token, "writeln") == 0){
+        Tree* aux = arvore->filhos->filhos;
+        if(strcmp(aux->token.categoria, "_StringLiteral") == 0){
+            prints[contador_print] = aux->token.token;
+        }
+        if(strcmp(aux->token.token, ",") == 0){
+            prints[contador_print]  = aux->filhos->token.token;
+        }
+        contador_print++;
+    }
     if(arvore->filhos != NULL){
         analisa_arvore(arvore->filhos, current);
     }
@@ -95,4 +110,10 @@ char* get_nome_escopo() {
     snprintf(to_return,32, "%s_%i","scope", get_escopo_atual());
     
     return to_return;
+}
+
+char** get_prints(int* size){
+    printf("%d inside \n", contador_print);
+    (*size) = contador_print;
+    return prints;
 }

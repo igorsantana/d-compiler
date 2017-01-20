@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+    char** get_prints(int* size);
     Tree* executa_semantico(Tree* arvore);
 
 
