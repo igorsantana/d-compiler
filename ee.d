@@ -4,4 +4,5 @@
     if(a==3){
         writeln("teste",1);
     }
+    writeln("teste", 1);
 }
