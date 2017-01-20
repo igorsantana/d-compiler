@@ -130,7 +130,7 @@ ItemLista* find_leafs(Tree* root, int* number) {
 
 /* COMEÇO FUNÇÕES RELACIONADAS A LISTA DA TABELA DE SIMBOLOS */
 
-ValorVariavel* create(Escopo* escopo, char* tipo);
+ValorVariavel* create(Escopo* escopo, char* tipo, void* valor);
 ItemVariavel*  create_lista();
 void           print_variavel(ItemVariavel* raiz);
 void            add_variavel(ItemVariavel* raiz, char* nome) ;
@@ -140,12 +140,14 @@ ValorVariavel* get_valor(ItemVariavel* raiz, Escopo* escopo, char* nome_escopo, 
 ItemVariavel*  get_variavel(ItemVariavel* raiz, char* variavel);
 ValorVariavel* encontra_escopo_declarado(ItemVariavel* raiz, Escopo* lista_escopo, char* nome_escopo, char* variavel);
 
-ValorVariavel* create(Escopo* escopo, char* tipo) {
+ValorVariavel* create(Escopo* escopo, char* tipo, void* valor) {
     ValorVariavel* to_return = malloc(sizeof(ValorVariavel));
-                   to_return->proximo = NULL;
-                   to_return->anterior = NULL;
-                   to_return->escopo = escopo;
-                   to_return->tipo = tipo;
+                   to_return->proximo   = NULL;
+                   to_return->anterior  = NULL;
+                   to_return->escopo    = escopo;
+                   to_return->valor     = valor;
+                   to_return->tipo      = tipo;
+                   to_return->escapa    = 0;
     return to_return;
 }
 
@@ -194,6 +196,7 @@ void add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel) {
             current = current->proximo;
         }
         variavel->anterior = current;
+        
         current ->proximo  = variavel;
         variavel->proximo  = NULL;
     }

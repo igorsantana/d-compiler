@@ -15,12 +15,13 @@
 #define LOCAL_V "%T"
 #define GLOBAL_V "@T"
 
-
+FILE * arq_llvm;
 int contador_label;
 int contador_variavel;
 
 
 int gerador_intermediario(Tree* arvore);
+void abrirArquivoLLVM();
 char* analisa_funcao(Tree* no);
 
 //Funções para selecao de regra
@@ -48,11 +49,20 @@ char* concat_str(char* des, char* src);
 char* comando_comp_LLVM(char * str);
 
 int gerador_intermediario(Tree* arvore) {
+    abrirArquivoLLVM();
     analisa_funcao(arvore);
+    fclose(arq_llvm);
     return 1;
 }
 
+void abrirArquivoLLVM(){
+    if((arq_llvm = fopen("intermediario.ll","a")) == NULL){
+        printf("Erro na criação do arquivo de código intermedário.");
+    }
+}
+
 char* analisa_funcao(Tree* no) {
+    printf("teste no: %s|\n", no->token);
     if (!strcmp("{", no->token.token)) {
         return gera_escopo(no);
     }
@@ -68,6 +78,9 @@ char* analisa_funcao(Tree* no) {
     if (!strcmp(no->token.token, "=")) {
         return gera_atribuicao(no);
     }
+    if (!strcmp(no->token.token, "writeln")){
+        return gera_write(no);
+    }
     if (!strcmp(no->token.categoria, "id")) {
         return gera_id(no);
     }
@@ -79,9 +92,6 @@ char* analisa_funcao(Tree* no) {
     }
     if (!strcmp(no->token.token, "while")){
         return gera_loop(no);
-    }
-    if (!strcmp(no->token.token, "writeln")){
-        return gera_write(no);
     }
 
     return no->token.token;
@@ -154,7 +164,7 @@ char* gera_simbolo(Tree* no) {
     buffer = concat_str(buffer, b);
     buffer = concat_str(buffer, "\n");
 
-    printf(buffer);
+    fprintf(arq_llvm,"%s",buffer);
 
     return variavel;
 }
@@ -176,7 +186,7 @@ char* gera_declaracao(Tree* no) {
 
         dir = analisa_funcao(no);
         retorno = gerar_variavel();
-        printf("%s = %s\n", retorno, dir);
+        fprintf(arq_llvm,"%s = %s\n", retorno, dir);
     }
     return retorno;
 }
@@ -193,7 +203,7 @@ char* gera_atribuicao(Tree* no) {
     no = no->irmaos;
     variavel = analisa_funcao(no);
     retorno = gerar_variavel();
-    printf("%s = %s\n", retorno, variavel);
+    fprintf(arq_llvm,"%s = %s\n", retorno, variavel);
 
     return retorno;
 }
@@ -223,10 +233,10 @@ char* gera_if(Tree* no) {
     
     
     
-    printf("br i1 %s, label %_t_%s, label %_end_%s\n_t_%s:\n", exp_rst, if_label, if_label, if_label);
+    fprintf(arq_llvm, "br i1 %s, label %_t_%s, label %_end_%s\n_t_%s:\n", exp_rst, if_label, if_label, if_label);
     no = no->irmaos;
     analisa_funcao(no);
-    printf("br label %_end_%s\n_end_%s:", if_label, if_label);
+    fprintf(arq_llvm,"br label %_end_%s\n_end_%s:", if_label, if_label);
     return NULL;
 
 }
@@ -238,7 +248,7 @@ char* gera_comparacao(Tree* no){
     no = no->irmaos;
     char* direita = analisa_funcao(no);
     char* ret = gerar_variavel();
-    printf("%s = icmp %s i32 %s %s\n", ret, comando_cmp, esquerda, direita);
+    fprintf(arq_llvm,"%s = icmp %s i32 %s %s\n", ret, comando_cmp, esquerda, direita);
     return ret;
 }
 
@@ -250,20 +260,20 @@ char* gera_loop(Tree* no) {
     char * label3 = gerar_loop_label();
     char cond[100];
     
-    printf("_%s\n", label1);
+    fprintf(arq_llvm, "_%s\n", label1);
     char* exp_rst = analisa_funcao(exp_tree);
-    printf("br i1 %s, label %_%s, label %_%s\n", exp_rst, label2, label3);
-    printf("_%s\n", label2);
+    fprintf(arq_llvm, "br i1 %s, label %_%s, label %_%s\n", exp_rst, label2, label3);
+    fprintf(arq_llvm, "_%s\n", label2);
     no = no->irmaos;
     analisa_funcao(no);
-    printf("br label %_%s\n", label1);
-    printf("_%s\n", label3);
+    fprintf(arq_llvm, "br label %_%s\n", label1);
+    fprintf(arq_llvm, "_%s\n", label3);
     return NULL;
 }
 
 char* gera_write(Tree* no) {
       //call i32 (i8*, ...)* @printf(i8* %msg, i32 12, i8 42)
-    
+    printf("no - write: %s\n", no->token);
 //    no = no->filhos;
 //    Tree* exp_tree = no->filhos;
 //    printf("write: %s", exp_tree->token);

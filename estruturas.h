@@ -27,7 +27,8 @@ struct Tree          { Token token; Tree *pai; Tree *irmaos; Tree *filhos; };
 struct ItemLista     { Tree* el; ItemLista* irmao; int id; };
 
 struct ItemVariavel  { ItemVariavel*  proximo; ValorVariavel* primeiro; char* nome; };
-struct ValorVariavel { ValorVariavel* proximo; Escopo* escopo; char*temp; char* tipo; char* categoria; void* valor; ValorVariavel* anterior;};
+struct ValorVariavel {  ValorVariavel* proximo; Escopo* escopo; char*temp; char* tipo;
+                        char* categoria; void* valor; ValorVariavel* anterior; int escapa;};
 
 struct Escopo        { char* nome; int profundidade; Escopo* proximo; Escopo* pai; };
 
@@ -56,7 +57,7 @@ ItemLista*  last_element(ItemLista*);
 ItemLista*  find_element(ItemLista* list);
 
 /* Funcoes relacionadas a lista da tabela de simbolos */
-ValorVariavel* create(Escopo* escopo, char* tipo);
+ValorVariavel* create(Escopo* escopo, char* tipo, void* valor);
 ItemVariavel*  create_lista();
 void           print_variavel(ItemVariavel* raiz);
 void           add_variavel(ItemVariavel* raiz, char* nome) ;
