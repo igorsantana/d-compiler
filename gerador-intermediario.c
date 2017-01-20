@@ -56,13 +56,12 @@ int gerador_intermediario(Tree* arvore) {
 }
 
 void abrirArquivoLLVM(){
-    if((arq_llvm = fopen("intermediario.ll","a")) == NULL){
+    if((arq_llvm = fopen("intermediario.ll","w")) == NULL){
         printf("Erro na criação do arquivo de código intermedário.");
     }
 }
 
 char* analisa_funcao(Tree* no) {
-    printf("teste no: %s|\n", no->token);
     if (!strcmp("{", no->token.token)) {
         return gera_escopo(no);
     }
@@ -79,6 +78,7 @@ char* analisa_funcao(Tree* no) {
         return gera_atribuicao(no);
     }
     if (!strcmp(no->token.token, "writeln")){
+        printf("teste");
         return gera_write(no);
     }
     if (!strcmp(no->token.categoria, "id")) {
@@ -272,8 +272,13 @@ char* gera_loop(Tree* no) {
 }
 
 char* gera_write(Tree* no) {
+    printf("etrou");
+    char str_print[300];
+    
+    sprintf(str_print,"%s","call i32 (i8*, ...)* @printf");
+    fprintf(arq_llvm, "%s", str_print);
       //call i32 (i8*, ...)* @printf(i8* %msg, i32 12, i8 42)
-    printf("no - write: %s\n", no->token);
+//    printf("no - write: %s\n", no->token);
 //    no = no->filhos;
 //    Tree* exp_tree = no->filhos;
 //    printf("write: %s", exp_tree->token);

@@ -23,13 +23,6 @@ Tree* executa_semantico(Tree* arvore) {
     raiz_escopo     = create_escopo();
     raiz_variavel   = create_lista();
     analisa_arvore(arvore, NULL);
-    //printf(" Variáveis: %s\n", raiz_variavel->nome);
-    //printf(" Variáveis: %s\n", raiz_variavel->proximo->nome);
-    //printf(" Escopo:    %s\n", raiz_escopo->nome);
-    //printf(" Escopo:    %s  Pai: %s\n", raiz_escopo->proximo->nome, raiz_escopo->proximo->pai->nome);
-    //printf(" Variável %s tem valor %s no escopo %s e tem valor de escape %d\n", raiz_variavel->nome, raiz_variavel->primeiro->valor, raiz_variavel->primeiro->escopo->nome, raiz_variavel->primeiro->escapa);
-    //printf(" Variável %s tem valor %s no escopo %s e tem valor de escape %d\n", raiz_variavel->proximo->nome, raiz_variavel->proximo->primeiro->valor, raiz_variavel->proximo->primeiro->escopo->nome, raiz_variavel->proximo-> primeiro->escapa);
-    
     return arvore;
 }
 
@@ -58,6 +51,21 @@ void atribuicao(Tree* arvore, Escopo* current) {
     }
 }
 
+void erro_declaracao(Tree* arvore){
+    if (strcmp(arvore->pai->token.token, "int") == 0 &&
+    strcmp(arvore->filhos->irmaos->token.categoria, "_IntegerLiteral") != 0) {
+        printf("[ERRO SEMÂNTICO] Atribuição de tipos incompatíveis na variável %s [Linha: %d, Coluna: %d] \n",
+                arvore->filhos->token.token, arvore->filhos->token.linha, arvore->filhos->token.coluna);
+        exit(1);
+    }
+    if (strcmp(arvore->pai->token.token, "string") == 0 &&
+        strcmp(arvore->filhos->irmaos->token.categoria, "_StringLiteral") != 0) {
+            printf("[ERRO SEMÂNTICO] Atribuição de tipos incompatíveis na variável %s [Linha: %d, Coluna: %d] \n",
+                    arvore->filhos->token.token, arvore->filhos->token.linha, arvore->filhos->token.coluna);
+            exit(1);
+    }
+}
+
 void analisa_arvore(Tree* arvore, Escopo* pai) {
     Escopo* current = pai;
     if (strcmp(arvore->token.token, "{") == 0) {
@@ -65,18 +73,12 @@ void analisa_arvore(Tree* arvore, Escopo* pai) {
     }
     if (strcmp(arvore->token.token, "=") == 0) {
         if(strcmp(arvore->pai->token.categoria, "PALAVRA_RESERVADA") == 0){
-//            if (strcmp(arvore->pai->token.categoria, arvore->filhos->irmaos->token.categoria) != 0) {
-//                
-//            }
+            erro_declaracao(arvore);
             declaracao(arvore, current);
         }
         if(strcmp(arvore->pai->token.token, ";") == 0){
-            
-            
             atribuicao(arvore, current);
         }
-        
-        
     }
     if(arvore->filhos != NULL){
         analisa_arvore(arvore->filhos, current);
