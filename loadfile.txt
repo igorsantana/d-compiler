@@ -61,7 +61,6 @@ BasicTypeX
 IfStatement
 IfExp
 ElseStatement
-IfCondition
 ScopeStatement
 WhileStatement
 WhileExp
@@ -147,7 +146,6 @@ _IntegerLiteral PrimaryExpression _IntegerLiteral
 _IntegerLiteral Initializer NonVoidInitializer
 _IntegerLiteral NonVoidInitializer AssignExpression
 _IntegerLiteral ElseStatement lambda
-_IntegerLiteral IfCondition Expression
 _IntegerLiteral ScopeStatement NonEmptyStatement
 _IntegerLiteral Parameters Expression ParameterList
 _StringLiteral Start Statement
@@ -168,7 +166,6 @@ _StringLiteral PrimaryExpression _StringLiteral
 _StringLiteral Initializer NonVoidInitializer
 _StringLiteral NonVoidInitializer AssignExpression
 _StringLiteral ElseStatement lambda
-_StringLiteral IfCondition Expression
 _StringLiteral ScopeStatement NonEmptyStatement
 _StringLiteral Parameters Expression ParameterList
 id Start Statement
@@ -194,7 +191,6 @@ id IdentifierDeclarator id
 id Initializer NonVoidInitializer
 id NonVoidInitializer AssignExpression
 id ElseStatement lambda
-id IfCondition Expression
 id ScopeStatement NonEmptyStatement
 id Parameters Expression ParameterList
 int Start Statement
@@ -235,7 +231,7 @@ if NonEmptyStatementNoCaseNoDefault IfStatement
 if IfStatement if IfExp ScopeStatement ElseStatement
 if ElseStatement lambda
 if ScopeStatement NonEmptyStatement
-( IfExp ( IfCondition )
+( IfExp ( Expression )
 ( WhileExp ( Expression )
 ( FunctionCall ( Parameters )
 ) AssignExpression1 lambda

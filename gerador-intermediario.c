@@ -14,7 +14,7 @@
 #define NUMBER "number"
 #define SYMBOL "SIMBOLO"
 #define LOCAL_V "%T"
-#define GLOBAL_V "@G"
+#define GLOBAL_V "%G"
 
 FILE * arq_llvm;
 Escopo* lista_escopo;
@@ -42,6 +42,7 @@ char* gera_statement(Tree* no);
 char* gera_simbolo(Tree* no);
 char* gera_declaracao(Tree* no);
 char* gera_atribuicao(Tree* no);
+char* gerar_uso_variavel(Tree* no);
 char* gera_id(Tree* no);
 char* gera_if(Tree* no);
 char* gera_comparacao(Tree* no);
@@ -57,6 +58,7 @@ char* gerar_global();
 char* gerar_temporario();
 char* gerar_rotulo(int* contador, char* label);
 char* concat_str(char* des, char* src);
+ValorVariavel* pega_valor_variavel(char* var);
 char* comando_comp_LLVM(char * str);
 void cria_str_global(char* str_global, int i);
 // Teste:
@@ -94,6 +96,8 @@ void abrirArquivoLLVM(char* filename) {
 }
 
 char* analisa_funcao(Tree* no) {
+
+
     if (!strcmp("{", no->token.token)) {
         return gera_escopo(no);
     }
@@ -182,7 +186,7 @@ char* gera_statement(Tree* no) {
 }
 
 char* gera_simbolo(Tree* no) {
-    char* buffer = NULL;
+//    char* buffer = NULL;
     char* variavel = NULL;
     char* a = NULL;
     char* b = NULL;
@@ -192,78 +196,91 @@ char* gera_simbolo(Tree* no) {
     b = analisa_funcao(current);
 
     variavel = gerar_variavel();
-    buffer = variavel;
+    
+    
+//    buffer = variavel;
+//    char* op = gera_operador(no->token.token[0]);
+    char* op = "add";
 
-    buffer = concat_str(buffer, " = ");
-    buffer = concat_str(buffer, gera_operador(no->token.token[0]));
-    buffer = concat_str(buffer, " i32 ");
-    buffer = concat_str(buffer, a);
-    buffer = concat_str(buffer, " , ");
-    buffer = concat_str(buffer, b);
-    buffer = concat_str(buffer, "\n");
+//    buffer = concat_str(buffer, " = ");
+//    buffer = concat_str(buffer, " i32 ");
+//    buffer = concat_str(buffer, a);
+//    buffer = concat_str(buffer, " , ");
+//    buffer = concat_str(buffer, b);
+//    buffer = concat_str(buffer, "\n");
 
-    fprintf(arq_llvm, "%s", buffer);
+    fprintf(arq_llvm, "%s = %s i32 %s, %s\n", variavel,op,a,b);
 
     return variavel;
 }
 
 char* gera_declaracao(Tree* no) {
-    char buffer[100];
-    char* retorno = NULL;
-
-    no = no->filhos; //  vai do int pro =
-    if (!strcmp("=", no->token.token)) {
-        char* esq = NULL;
-        char* dir = NULL;
-        no = no->filhos; //  vai do = pro id
-
-        //Utilizar essa label pra atualizar a label do temporario na tabela de simbulos
-        dir = no->token.token;
-
-        no = no->irmaos; //   vai do id pra atribuição
-
-        dir = analisa_funcao(no);
-        retorno = gerar_variavel();
-        fprintf(arq_llvm, "%s = %s\n", retorno, dir);
+    Tree* atual = no = no->filhos;
+    char* esq = NULL;
+    char* dir = NULL;    
+    if (!strcmp("=", atual->token.token)) {
+        atual = atual->filhos; //  vai do = pro id
     }
-    return retorno;
+    ValorVariavel* item = pega_valor_variavel(atual->token.token); 
+    if(!item->escapa && atual == no){
+        return;
+    }else if(item->escapa){
+        esq = analisa_funcao(no);
+        fprintf(arq_llvm, "%s = alloca i32\n", esq);       
+    }
+    if (strcmp("=", no->token.token)) {
+        return esq;
+    }
+    return analisa_funcao(no);
 }
 
 char* gera_atribuicao(Tree* no) {
     char buffer[100];
     char* esq;
-    char* variavel;
-    char* retorno;
+    char* dir;
+    Tree* atual = no->filhos;
     no = no->filhos;
-    //    buscar na tabela de simbulo e adicionar a label
-    esq = no->token.token;
-
+    ValorVariavel* item = pega_valor_variavel(atual->token.token); 
+    esq = gerar_uso_variavel(no);
     no = no->irmaos;
-    variavel = analisa_funcao(no);
-    retorno = gerar_variavel();
-    fprintf(arq_llvm, "%s = i32 %s\n", retorno, variavel);
+    dir = analisa_funcao(no);
+    if(item->escapa){
+        fprintf(arq_llvm, "store i32 %s, i32* %s\n", dir, esq);
+    }else{
+        fprintf(arq_llvm, "%s = add i32 %s, 0 \n", esq, dir);
+    }
 
-    return retorno;
+    return esq;
+}
+
+char* gerar_uso_variavel(Tree* no){
+    ValorVariavel* item = pega_valor_variavel(no->token.token);
+    if(item->temp != NULL && item->temp != -1){
+        return item->temp;
+    }
+    if(item->escapa){
+        item->temp  = gerar_global();
+    }else{
+        item->temp  = gerar_temporario();
+    }
+    return item->temp;
 }
 
 char* gera_id(Tree* no) {
-    //    Adicionar nessa função a manipulacao da tabela de simbolos
-    char* nome_escopo;
-    sprintf(nome_escopo,"scope_+%i", escopo[ponteiro_escopo]);
-    ValorVariavel* item = encontra_escopo_declarado(lista_variavel,lista_escopo,nome_escopo,no->token.token);
-    if(item->temp == NULL){
-        return item->temp;
-    } 
-    char* var; 
+    ValorVariavel* item = pega_valor_variavel(no->token.token);
     if(item->escapa){
-        var  = gerar_global();
-    }else{
-        var  = gerar_temporario();
-    }
-    sprintf(item->temp,"%s",var);
+        char* temp = gerar_variavel();
+        fprintf(arq_llvm,"%s = load i32, i32* %s\n",temp, item->temp);
+        return temp;
+    }        
     return item->temp;
     
-    
+}
+
+ValorVariavel* pega_valor_variavel(char* var){
+    char nome_escopo[10];
+    sprintf(nome_escopo,"scope_%i", escopo[ponteiro_escopo]);
+    return encontra_escopo_declarado(lista_variavel,lista_escopo,nome_escopo,var);
 }
 
 char* comando_comp_LLVM(char * str) {
@@ -300,26 +317,36 @@ char* gera_comparacao(Tree* no) {
     no = no->irmaos;
     char* direita = analisa_funcao(no);
     char* ret = gerar_variavel();
-    fprintf(arq_llvm, "%s = icmp %s i32 %s %s\n", ret, comando_cmp, esquerda, direita);
+    fprintf(arq_llvm, "%s = icmp %s i32 %s, %s\n", ret, comando_cmp, esquerda, direita);
     return ret;
 }
 
 char* gera_loop(Tree* no) {
     no = no->filhos;
     Tree* exp_tree = no->filhos;
+    Tree* bloco_tree = no->irmaos;
+    if(!strcmp(exp_tree->token.token,")")){
+        bloco_tree = exp_tree->irmaos;
+        exp_tree = exp_tree->filhos;
+    }
     char * label1 = gerar_loop_label();
     char * label2 = gerar_loop_label();
     char * label3 = gerar_loop_label();
     char cond[100];
 
-    fprintf(arq_llvm, "_%s\n", label1);
+    fprintf(arq_llvm, "br label %_%s\n", label1);
+    fprintf(arq_llvm, "_%s:\n", label1);
     char* exp_rst = analisa_funcao(exp_tree);
     fprintf(arq_llvm, "br i1 %s, label %_%s, label %_%s\n", exp_rst, label2, label3);
-    fprintf(arq_llvm, "_%s\n", label2);
-    no = no->irmaos;
-    analisa_funcao(no);
+    fprintf(arq_llvm, "_%s:\n", label2);
+    analisa_funcao(bloco_tree);
     fprintf(arq_llvm, "br label %_%s\n", label1);
-    fprintf(arq_llvm, "_%s\n", label3);
+    fprintf(arq_llvm, "_%s:\n", label3);
+    
+    if(!strcmp(no->filhos->token.token,")")){
+        analisa_funcao(no->irmaos);
+        
+    }
     return NULL;
 }
 

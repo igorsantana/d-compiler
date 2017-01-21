@@ -146,6 +146,7 @@ ValorVariavel* create(Escopo* escopo, char* tipo, void* valor) {
                    to_return->valor     = valor;
                    to_return->tipo      = tipo;
                    to_return->escapa    = 0;
+                   to_return->temp      = NULL;
     return to_return;
 }
 

@@ -56,11 +56,11 @@ void declaracao(Tree* arvore, Escopo* current) {
 
 void atribuicao(Tree* arvore, Escopo* current) {
     ValorVariavel* declaracao = encontra_escopo_declarado(raiz_variavel, raiz_escopo, current->nome, arvore->filhos->token.token);
-//    if(declaracao == NULL){
-//        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] não foi declarada previamente. \n", arvore->filhos->token.token,
-//                arvore->filhos->token.linha, arvore->filhos->token.coluna);
-//        exit(1);
-//    }
+    if(declaracao == NULL){
+        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] não foi declarada previamente. \n", arvore->filhos->token.token,
+                arvore->filhos->token.linha, arvore->filhos->token.coluna);
+        exit(1);
+    }
     if(strcmp(declaracao->escopo->nome, current->nome) != 0 ){
         declaracao->escapa = 1;
     }
@@ -83,9 +83,9 @@ void erro_declaracao(Tree* arvore){
 
 void print_variaveis() {
     ItemVariavel* current = raiz_variavel;
-    printf("%s - %s\n", current->nome, current->primeiro->escopo->nome);
-    printf("%s - %s\n", current->proximo->nome, current->proximo->primeiro->escopo->nome);
-    printf("%s - %s\n", current->proximo->proximo->nome, current->proximo->proximo->primeiro->escopo->nome);
+//    printf("%s - %s\n", current->nome, current->primeiro->escopo->nome);
+//    printf("%s - %s\n", current->proximo->nome, current->proximo->primeiro->escopo->nome);
+//    printf("%s - %s\n", current->proximo->proximo->nome, current->proximo->proximo->primeiro->escopo->nome);
 //    printf("%s/ - %s\n", current->proximo->proximo->nome, current->proximo->proximo->primeiro->escopo->nome);
 //    
 //    printf("%s - %s\n", current->nome, current->primeiro->escopo->nome);
