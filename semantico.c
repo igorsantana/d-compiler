@@ -48,13 +48,11 @@ void declaracao(Tree* arvore, Escopo* current) {
 void atribuicao(Tree* arvore, Escopo* current) {
     //printf("%s - %s\n", arvore->token.token, current->nome);
     ValorVariavel* declaracao = encontra_escopo_declarado(raiz_variavel, raiz_escopo, current->nome, arvore->filhos->token.token);
-    //if (declaracao == NULL) {
-//        printf("Teste\n");
-//        arvore->filhos
-//        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] não foi declarada previamente. \n", arvore->filhos->token.token,
-//                arvore->filhos->token.linha, arvore->filhos->token.coluna);
-    //    exit(1);
-    //}
+    if (declaracao == NULL) {
+        Token erro = arvore->filhos->token;
+        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] não foi declarada previamente. \n", erro.token, erro.linha, erro.coluna);
+        exit(1);
+    }
 //    if(strcmp(declaracao->escopo->nome, current->nome) != 0 ){
 //        declaracao->escapa = 1;
 //    }
