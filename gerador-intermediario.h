@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-int gerador_intermediario(Tree* arvore);
+int gerador_intermediario(Tree* arvore, char* file);
 
 
 #ifdef __cplusplus

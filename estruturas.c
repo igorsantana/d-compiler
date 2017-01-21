@@ -165,7 +165,10 @@ void print_variavel(ItemVariavel* raiz) {
 }
 
 void add_variavel(ItemVariavel* raiz, char* nome) {
-    
+    if (raiz->nome == NULL) {
+        raiz->nome = nome;
+        return;
+    }
     ItemVariavel* current = raiz;
     while (current->proximo != NULL) {
         current = current->proximo;
@@ -202,18 +205,20 @@ void add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel) {
 
 ItemVariavel* get_variavel(ItemVariavel* raiz, char* variavel) {
     ItemVariavel* index = raiz;
-    while(index != NULL) {
+    if(index->nome == NULL) return NULL;
+    while(index->nome != NULL) {
         if (strcmp(index->nome, variavel) == 0) {
             return index;
         }
+        if(index->proximo == NULL) return NULL;
         index = index->proximo;
     }
+    
     return NULL;
 }
 
 ValorVariavel* get_valor(ItemVariavel* raiz, Escopo* escopo, char* nome_escopo, char* variavel) {
     ItemVariavel* item_variavel = get_variavel(raiz, variavel);
-    
     if (item_variavel == NULL) return NULL;
     
     // Define ponteiro no ultimo:
