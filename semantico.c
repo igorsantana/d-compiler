@@ -51,7 +51,6 @@ void atribuicao(Tree* arvore, Escopo* current) {
         exit(1);
     }
     if(strcmp(declaracao->escopo->nome, current->nome) != 0 ){
-        //printf("Nome do escopo: %s, declaracao: %s, variável: %s\n", current->nome, declaracao->escopo->nome, arvore->filhos->token.token);
         declaracao->escapa = 1;
     }
 }
@@ -113,7 +112,6 @@ char* get_nome_escopo() {
 }
 
 char** get_prints(int* size){
-    printf("%d inside \n", contador_print);
     (*size) = contador_print;
     return prints;
 }

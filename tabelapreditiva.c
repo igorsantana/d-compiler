@@ -42,8 +42,8 @@ void leituraDosConjuntos() {
         if (strcmp(conjuntoT[indexT].c, "\n") == 0) {
             break;
         }
-
-        for (int k = 0; k < strlen(conjuntoT[indexT].c); k++) {
+        int k;
+        for (k = 0; k < strlen(conjuntoT[indexT].c); k++) {
             if (conjuntoT[indexT].c[k] == '\n' || conjuntoT[indexT].c[k] == ' ') {
                 conjuntoT[indexT].c[k] = '\0';
             }
@@ -55,8 +55,8 @@ void leituraDosConjuntos() {
         if (strcmp(conjuntoNT[indexNT].c, "\n") == 0) {
             break;
         }
-
-        for (int k = 0; k < strlen(conjuntoNT[indexNT].c); k++) {
+        int k;
+        for (k = 0; k < strlen(conjuntoNT[indexNT].c); k++) {
             if (conjuntoNT[indexNT].c[k] == '\n' || conjuntoNT[indexNT].c[k] == ' ') {
                 conjuntoNT[indexNT].c[k] = '\0';
             }
@@ -84,19 +84,12 @@ void leituraDosConjuntos() {
             }
             i++;
         }
-//        if(str1[0] == ';'){
-//            
-//            printf("[%s,%i]-[%s,%i]- %i -",str2,linha,str1,coluna,matrizPreditiva[linha][coluna].indexCaracter);
-//            for(int h = 0; h < matrizPreditiva[linha][coluna].indexCaracter;h++){
-//                printf("%i / %s #",h,matrizPreditiva[linha][coluna].caracteres[h].c);
-//            }
-//            printf("\n\n");
-//        }
     }
 }
 
 int retornaIndiceNT(char * str) {
-    for (int i = 0; i < indexNT; i++) {
+    int i;
+    for (i = 0; i < indexNT; i++) {
         if (strcmp(conjuntoNT[i].c, str) == 0) {
             return i;
         }
@@ -104,7 +97,8 @@ int retornaIndiceNT(char * str) {
     return -1;
 }
 int retornaIndiceT(char * str) {
-    for (int i = 0; i < indexT; i++) {
+    int i;
+    for (i = 0; i < indexT; i++) {
         if (strcmp(conjuntoT[i].c, str) == 0) {
             return i;
         }
@@ -115,24 +109,19 @@ int retornaIndiceT(char * str) {
 
 
 void printaMatrizPreditiva() {
-    for (int j = 0; j < indexT; j++) {
-        printf("%s \t|", conjuntoT[j].c);
+    int j;
+    for (j = 0; j < indexT; j++) {
     }
-    printf("\n");
-    for (int i = 0; i < indexNT; i++) {
-        printf("%s \t|", conjuntoNT[i].c);
-        for (int j = 0; j < indexT; j++) {
+    int i ;
+    for (i = 0; i < indexNT; i++) {
+        int j;
+        for (j = 0; j < indexT; j++) {
             if (matrizPreditiva[i][j].indexCaracter > 0) {
-                printf("%s->", conjuntoNT[i].c);
-                for (int k = 0; k < matrizPreditiva[i][j].indexCaracter; k++) {
-                    printf("%s ", matrizPreditiva[i][j].caracteres[k].c);
+                int k;
+                for (k = 0; k < matrizPreditiva[i][j].indexCaracter; k++) {
                 }
-                printf("\n");
             } else {
-                printf("\t");
             }
-            printf("\t|");
         }
-        printf("\n");
     }
 }

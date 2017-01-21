@@ -60,7 +60,6 @@ int gerador_intermediario(Tree* arvore) {
     for (i; i < contador_prints; i++) {
         gera_constantes_write(i, prints[i]);
     }
-//    gera_constantes_write();
     fprintf(arq_llvm, "define i32 @main(){\n");
     analisa_funcao(arvore);
     fprintf(arq_llvm, "\n}");
@@ -111,7 +110,8 @@ char* analisa_funcao(Tree* no) {
 
 int eh_declaracao(Token* tok) {
     char tipos[3][5] = {"char", "int", "float"};
-    for (int i = 0; i < 3; i++) {
+    int i;
+    for (i = 0; i < 3; i++) {
         if (!strcmp(tipos[i], tok->token)) {
             return 1;
         }
@@ -121,7 +121,8 @@ int eh_declaracao(Token* tok) {
 
 int eh_operacao(Token* tok) {
     char operandos[4][2] = {"+", "-", "*", "/"};
-    for (int i = 0; i < 4; i++) {
+    int i;
+    for (i = 0; i < 4; i++) {
         if (!strcmp(operandos[i], tok->token)) {
             return 1;
         }
@@ -132,7 +133,8 @@ int eh_operacao(Token* tok) {
 
 int eh_comparacao(Token* tok) {
     char simbolos[6][5] = {"==", "!=", ">", ">=", "<", "<="};
-    for (int i = 0; i < 6; i++) {
+    int i ;
+    for (i = 0; i < 6; i++) {
         if (!strcmp(simbolos[i], tok->token)) {
             return 1;
         }

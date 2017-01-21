@@ -38,52 +38,39 @@ Tree* preditivoDescendente() {
     arvore = criaArvore(arvore, X->c, NAO_TERMINAL);
 
     while (strcmp(X->c, "$")) {
-        printf("\n%s| |%s|\n",X->c,a.token);
-//        printf("1\n");
         if (!strcmp("lambda", X->c)) {
-//        printf("2\n");
             desempilha(&p);
         } else if (!comparaTerminal(X->c, a)) {
-//        printf("3\n");
             arvore = adicionaFilho(arvore,a);
             a = getToken();
             indexA = retornaIndiceTerminal(a);
             desempilha(&p);
         } else if (!isupper(X->c[0])) {
-//            printf("----");
-//            printa_pilha(p.topo);
             printf("Símbolo inválido.%s\n",X->c);
             return NULL;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter <= 0) {
             printf("Erro. erro de gramática.\n");
             return NULL;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter > 0) {
-//        printf("4\n");
             desempilha(&p);
-            printf("\n\t empilha->");
-            for (int i = matrizPreditiva[indexX][indexA].indexCaracter - 1; i >= 0; i--) {
-                printf("%s|",matrizPreditiva[indexX][indexA].caracteres[i].c);
+            int i;
+            for (i = matrizPreditiva[indexX][indexA].indexCaracter - 1; i >= 0; i--) {
                 empilha(&p, matrizPreditiva[indexX][indexA].caracteres[i].c);
             }
-            printf("\n");
-            for (int i = 0; i < matrizPreditiva[indexX][indexA].indexCaracter; i++) {
-                arvore = adicionaFilhoLabel(arvore,matrizPreditiva[indexX][indexA].caracteres[i].c,NAO_TERMINAL);
+            int j;
+            for (j = 0; j < matrizPreditiva[indexX][indexA].indexCaracter; j++) {
+                arvore = adicionaFilhoLabel(arvore,matrizPreditiva[indexX][indexA].caracteres[j].c,NAO_TERMINAL);
             }
         }
-//        printf("5\n");
         X = p.topo;
         arvore = ajustaPonteiro(arvore,X->c);
         indexX = retornaIndiceNT(X->c);
-//        printf("6\n");
     }
-//        printf("7\n");
     
     arvore = voltaTopo(arvore);
-//        printf("8\n");
 //    printaArvore(arvore);
-    printf("\n\n\n");
     reduce_tree(arvore);
-    printaArvore(arvore);
+//    printaArvore(arvore);
     
     return arvore;
 }
@@ -182,7 +169,6 @@ Tree* buscaAntecessor(Tree* arv,char* token){
 
     while(current != NULL){
         if(!strcmp(current->token.token,token)){
-//            printf("\n%s-%s\n",token,current->token.token);
             return current;
         }
         if(current->irmaos == NULL){
@@ -200,14 +186,11 @@ Tree* buscaAntecessor(Tree* arv,char* token){
  */
 void printaArvore(Tree* arvore){
     
-    printf("%s->",arvore->token.token);
     
     Tree* atual = arvore->filhos;
     while(atual != NULL){
-        printf("%s--",atual->token.token);
         atual = atual->irmaos;
     }
-    printf("\n");
     atual = arvore->filhos;
     while(atual != NULL){
 //        printaArvore(atual);

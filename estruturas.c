@@ -39,7 +39,6 @@ void empilha(Pilha* pilha, char * elemento) {
 }
 
 void printa_pilha(Elemento* pilha) {
-    printf("%s\n", pilha->c);
     if (pilha->abaixo != NULL) {
         printa_pilha(pilha->abaixo);
     }
@@ -73,7 +72,6 @@ void add_list(ItemLista* root, Tree* to_add) {
 void print_list(ItemLista* root) {
     ItemLista* c = root;
     while (c != NULL) {
-        printf("Element: %s\n", c->el->token.token);
         c = c->irmao;
     }
 }
@@ -243,7 +241,6 @@ ValorVariavel* encontra_escopo_declarado(ItemVariavel* raiz, Escopo* lista_escop
         current_escopo = current_escopo->pai;
         current = get_valor(raiz, lista_escopo, current_escopo->nome, variavel);
         
-//        printf("[1] %s\n", current_escopo->nome);
         
         if (current != NULL) {
             return current;
@@ -431,20 +428,15 @@ int reduce_tree(Tree* root) {
     while (atual != NULL) {
         Tree* pai = atual->el->pai;
         if (!strcmp(atual->el->token.token, LAMBDA)
-//                || separador_inutil(atual->el->token)
                 ) {
-//            printf("\n%s\n", atual->el->token.token);
             folhas = remove_lambda(pai, atual->el, folhas, atual);
         }
         atual = atual->irmao;
     }
     atual = folhas;
-//    printf("\n\n");
     while (atual != NULL) {
-//        printf("%s-%s\n", atual->el->token.token, atual->el->token.categoria);
         atual = atual->irmao;
     }
-//    printf("\n\n");
 
 
     while (new_size) {
@@ -479,8 +471,8 @@ int reduce_tree(Tree* root) {
  */
 int separador_inutil(Token token) {
     char separadores_inuteis[3][3] = {";", "{", "}"};
-
-    for (int i = 0; i < 3; i++) {
+    int i;
+    for (i = 0; i < 3; i++) {
         if (!strcmp(separadores_inuteis[i], token.token)) {
             return 1;
         }
