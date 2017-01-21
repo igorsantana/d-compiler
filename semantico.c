@@ -29,7 +29,7 @@ Tree* executa_semantico(Tree* arvore) {
     raiz_escopo     = create_escopo();
     raiz_variavel   = create_lista();
     analisa_arvore(arvore, NULL);
-    print_variaveis();
+//    print_variaveis();
     return arvore;
 }
 
@@ -46,15 +46,18 @@ void declaracao(Tree* arvore, Escopo* current) {
 }
 
 void atribuicao(Tree* arvore, Escopo* current) {
+    //printf("%s - %s\n", arvore->token.token, current->nome);
     ValorVariavel* declaracao = encontra_escopo_declarado(raiz_variavel, raiz_escopo, current->nome, arvore->filhos->token.token);
-//    if(declaracao == NULL){
+    //if (declaracao == NULL) {
+//        printf("Teste\n");
+//        arvore->filhos
 //        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] não foi declarada previamente. \n", arvore->filhos->token.token,
 //                arvore->filhos->token.linha, arvore->filhos->token.coluna);
-//        exit(1);
+    //    exit(1);
+    //}
+//    if(strcmp(declaracao->escopo->nome, current->nome) != 0 ){
+//        declaracao->escapa = 1;
 //    }
-    if(strcmp(declaracao->escopo->nome, current->nome) != 0 ){
-        declaracao->escapa = 1;
-    }
 }
 
 void erro_declaracao(Tree* arvore){
@@ -75,13 +78,9 @@ void erro_declaracao(Tree* arvore){
 void print_variaveis() {
     ItemVariavel* current = raiz_variavel;
     printf("%s - %s\n", current->nome, current->primeiro->escopo->nome);
-    printf("%s - %s\n", current->proximo->nome, current->proximo->primeiro->escopo->nome);
-    printf("%s - %s\n", current->proximo->proximo->nome, current->proximo->proximo->primeiro->escopo->nome);
-//    printf("%s/ - %s\n", current->proximo->proximo->nome, current->proximo->proximo->primeiro->escopo->nome);
-//    
-//    printf("%s - %s\n", current->nome, current->primeiro->escopo->nome);
 //    printf("%s - %s\n", current->proximo->nome, current->proximo->primeiro->escopo->nome);
 //    printf("%s - %s\n", current->proximo->proximo->nome, current->proximo->proximo->primeiro->escopo->nome);
+//    printf("%s - %s\n", current->proximo->proximo->proximo->nome, current->proximo->proximo->proximo->primeiro->escopo->nome);
 }
 
 void analisa_arvore(Tree* arvore, Escopo* pai) {
@@ -92,21 +91,19 @@ void analisa_arvore(Tree* arvore, Escopo* pai) {
         current = add_escopo(raiz_escopo, get_nome_escopo(), -1, pai);
     }
     
-    // Nova Declaracao:
+    // Declaracao sem definir valor:
     if ((strcmp(arvore->token.token, "int") == 0)
      || (strcmp(arvore->token.token, "string") == 0)) {
         Tree* filho = arvore->filhos;
         if (filho != NULL) {
             if (strcmp(filho->token.categoria, "id") == 0) {
-                
-//                printf("%s - %s\n", filho->token.token, current->nome);
                 add_variavel(raiz_variavel, filho->token.token);
                 add_item(raiz_variavel, filho->token.token, create(current, arvore->token.token, NULL));
             }
         }
     }
     
-    // Nova Atribuicao/Declaracao:
+    // Atribuicao/Declaracao:
     if (strcmp(arvore->token.token, "=") == 0) {
         if(strcmp(arvore->pai->token.categoria, "PALAVRA_RESERVADA") == 0){
             
