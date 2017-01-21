@@ -46,10 +46,14 @@ Tree* preditivoDescendente() {
             indexA = retornaIndiceTerminal(a);
             desempilha(&p);
         } else if (!isupper(X->c[0])) {
-            printf("Símbolo inválido.%s\n",X->c);
+//            printf("Símbolo inválido.%s\n",X->c);
+            printf("[ERRO SINTÁTICO] Expressão inválida.\n");
+            exit(1);
             return NULL;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter <= 0) {
-            printf("Erro. erro de gramática.\n");
+//            printf("Erro. erro de gramática.\n");
+            printf("[ERRO SINTÁTICO] Expressão inválida.\n");
+            exit(1);
             return NULL;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter > 0) {
             desempilha(&p);
@@ -186,14 +190,17 @@ Tree* buscaAntecessor(Tree* arv,char* token){
  */
 void printaArvore(Tree* arvore){
     
+    printf("%s->",arvore->token.token);
     
     Tree* atual = arvore->filhos;
     while(atual != NULL){
+        printf("%s--",atual->token.token);
         atual = atual->irmaos;
     }
+    printf("\n");
     atual = arvore->filhos;
     while(atual != NULL){
-//        printaArvore(atual);
+        printaArvore(atual);
         atual = atual->irmaos;
     }
     
