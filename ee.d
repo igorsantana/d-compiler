@@ -1,2 +1,5 @@
-writeln("teste%d", 1, 3);
-writeln("tteswa");
+{
+    int a = 10;
+    a = 10;
+    //b = 5;
+}

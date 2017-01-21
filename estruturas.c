@@ -202,7 +202,7 @@ void add_item(ItemVariavel* raiz, char* nome, ValorVariavel* variavel) {
 
 ItemVariavel* get_variavel(ItemVariavel* raiz, char* variavel) {
     ItemVariavel* index = raiz;
-    while(index != NULL) {
+    while(index->nome != NULL) {
         if (strcmp(index->nome, variavel) == 0) {
             return index;
         }

@@ -97,11 +97,11 @@ int main(int argc, char** argv) {
     
     gerador_intermediario(raiz, arq_no_extension);
     
-    escreve_assembly(arq_no_extension);
-    
-    gera_executavel(arq_no_extension);
-
-    executa_assembly(arq_no_extension);
+//    escreve_assembly(arq_no_extension);
+//    
+//    gera_executavel(arq_no_extension);
+//
+//    executa_assembly(arq_no_extension);
     
 //    exclui_temporarios(arq_no_extension);
     return (EXIT_SUCCESS);
