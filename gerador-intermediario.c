@@ -20,8 +20,8 @@ FILE * arq_llvm;
 int contador_label;
 int contador_variavel;
 
-int gerador_intermediario(Tree* arvore);
-void abrirArquivoLLVM();
+int gerador_intermediario(Tree* arvore, char* file);
+void abrirArquivoLLVM(char* filename);
 char* analisa_funcao(Tree* no);
 
 //Funções para selecao de regra
@@ -52,10 +52,12 @@ void cria_str_global(char* str_global, int i);
 // Teste:
 void gera_caractere(Tree* no);
 
-int gerador_intermediario(Tree* arvore) {
+int gerador_intermediario(Tree* arvore, char* filename) {
+    abrirArquivoLLVM(filename);
+    
     int contador_prints;
     char** prints = get_prints(&contador_prints);
-    abrirArquivoLLVM();
+    
     int i = 0;
     for (i; i < contador_prints; i++) {
         gera_constantes_write(i, prints[i]);
@@ -67,8 +69,10 @@ int gerador_intermediario(Tree* arvore) {
     return 1;
 }
 
-void abrirArquivoLLVM() {
-    if ((arq_llvm = fopen("intermediario.ll", "w")) == NULL) {
+void abrirArquivoLLVM(char* filename) {
+    char nome_arq_llv[34];
+    sprintf(nome_arq_llv, "%s.%s", filename, "ll");
+    if ((arq_llvm = fopen(nome_arq_llv, "w")) == NULL) {
         printf("Erro na criação do arquivo de código intermedário.");
     }
 }
