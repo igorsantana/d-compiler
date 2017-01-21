@@ -6,7 +6,8 @@ extern "C" {
 #endif
     char** get_prints(int* size);
     Tree* executa_semantico(Tree* arvore);
-
+    Escopo* get_raiz_escopo();
+    ItemVariavel* get_raiz_variavel();
 
 #ifdef __cplusplus
 }

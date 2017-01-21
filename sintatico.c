@@ -186,14 +186,17 @@ Tree* buscaAntecessor(Tree* arv,char* token){
  */
 void printaArvore(Tree* arvore){
     
+    printf("%s->",arvore->token.token);
     
     Tree* atual = arvore->filhos;
     while(atual != NULL){
+        printf("%s--",atual->token.token);
         atual = atual->irmaos;
     }
+    printf("\n");
     atual = arvore->filhos;
     while(atual != NULL){
-//        printaArvore(atual);
+        printaArvore(atual);
         atual = atual->irmaos;
     }
     

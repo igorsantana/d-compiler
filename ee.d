@@ -1,2 +1,4 @@
-writeln("teste%d", 1, 3);
-writeln("tteswa");
+{
+    int a=10;
+    writeln("Quero ver ate onde essa string vai %i", a);
+}

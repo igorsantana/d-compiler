@@ -18,6 +18,15 @@ void    erro_declaracao(Tree* arvore);
 void    atribuicao(Tree* arvore, Escopo* current);
 void    declaracao(Tree* arvore, Escopo* current);
 
+Escopo* get_raiz_escopo(){
+    return raiz_escopo;
+}
+
+ItemVariavel* get_raiz_variavel(){
+    return raiz_variavel;
+}
+
+
 int get_escopo_atual(){
     int atual = inc_escopo;
     inc_escopo++;

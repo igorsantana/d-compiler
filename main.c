@@ -13,6 +13,8 @@
 
 char* nomeArquivo;
 int VERBOSE_MODE = 0;
+int contador_escopo_geracao = 0;
+int escopo_atual = 0;
 
 void help();
 void opcoes_entrada(int argc, char** argv);
@@ -89,10 +91,10 @@ int main(int argc, char** argv) {
         printf("Arquivo não encontrado!");
     }
     
-//    arquivo_leitura(arquivo); 
-//    Tree* raiz = preditivoDescendente();
+    arquivo_leitura(arquivo); 
+    Tree* raiz = preditivoDescendente();
 //    executa_semantico(raiz);
-//    gerador_intermediario(raiz);
+    gerador_intermediario(raiz);
 
 
     

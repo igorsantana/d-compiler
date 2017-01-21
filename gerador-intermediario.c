@@ -14,11 +14,19 @@
 #define NUMBER "number"
 #define SYMBOL "SIMBOLO"
 #define LOCAL_V "%T"
-#define GLOBAL_V "@T"
+#define GLOBAL_V "@G"
 
 FILE * arq_llvm;
+Escopo* lista_escopo;
+ItemVariavel* lista_variavel; 
+
 int contador_label;
 int contador_variavel;
+int contador_print_gerador = 0;
+int contador_escopo = 0;
+int ponteiro_escopo = -1;
+int escopo[10];
+
 
 int gerador_intermediario(Tree* arvore);
 void abrirArquivoLLVM();
@@ -45,6 +53,8 @@ char* gera_operador(char str);
 char* gerar_if_label();
 char* gerar_loop_label();
 char* gerar_variavel();
+char* gerar_global();
+char* gerar_temporario();
 char* gerar_rotulo(int* contador, char* label);
 char* concat_str(char* des, char* src);
 char* comando_comp_LLVM(char * str);
@@ -53,16 +63,23 @@ void cria_str_global(char* str_global, int i);
 void gera_caractere(Tree* no);
 
 int gerador_intermediario(Tree* arvore) {
+    lista_escopo = get_raiz_escopo();
+    lista_variavel = get_raiz_variavel();
+    
+    
     int contador_prints;
+    contador_print_gerador = 0;
     char** prints = get_prints(&contador_prints);
     abrirArquivoLLVM();
     int i = 0;
     for (i; i < contador_prints; i++) {
         gera_constantes_write(i, prints[i]);
     }
+    fprintf(arq_llvm, "declare i32 @printf(i8* , ...)\n");
+    
     fprintf(arq_llvm, "define i32 @main(){\n");
     analisa_funcao(arvore);
-    fprintf(arq_llvm, "\n}");
+    fprintf(arq_llvm, "ret i32 0\n}");
     fclose(arq_llvm);
     return 1;
 }
@@ -143,8 +160,12 @@ int eh_comparacao(Token* tok) {
 }
 
 char* gera_escopo(Tree* no) {
+    escopo[++ponteiro_escopo] = contador_escopo++;
     no = no->filhos;
-    return analisa_funcao(no);
+    char* ret = analisa_funcao(no);
+    ponteiro_escopo--;
+    
+    return ret;
 }
 
 char* gera_statement(Tree* no) {
@@ -217,14 +238,29 @@ char* gera_atribuicao(Tree* no) {
     no = no->irmaos;
     variavel = analisa_funcao(no);
     retorno = gerar_variavel();
-    fprintf(arq_llvm, "%s = %s\n", retorno, variavel);
+    fprintf(arq_llvm, "%s = i32 %s\n", retorno, variavel);
 
     return retorno;
 }
 
 char* gera_id(Tree* no) {
     //    Adicionar nessa função a manipulacao da tabela de simbolos
-    return gerar_variavel();
+    char* nome_escopo;
+    sprintf(nome_escopo,"scope_+%i", escopo[ponteiro_escopo]);
+    ValorVariavel* item = encontra_escopo_declarado(lista_variavel,lista_escopo,nome_escopo,no->token.token);
+    if(item->temp == NULL){
+        return item->temp;
+    } 
+    char* var; 
+    if(item->escapa){
+        var  = gerar_global();
+    }else{
+        var  = gerar_temporario();
+    }
+    sprintf(item->temp,"%s",var);
+    return item->temp;
+    
+    
 }
 
 char* comando_comp_LLVM(char * str) {
@@ -285,7 +321,7 @@ char* gera_loop(Tree* no) {
 }
 
 void gera_constantes_write(int i, char* str) {
-    int length = strlen(str);
+    int length = strlen(str)-2;
     char str_global[20];
     cria_str_global(&str_global, i);
     fprintf(arq_llvm, "%s = internal constant [%i x i8] c%s\n", str_global, length, str);
@@ -304,26 +340,30 @@ char* gera_write(Tree* no) {
             t_aux = t_aux->filhos;
         }
 
-        int length = strlen(t_aux->token.token);
-//        fprintf(arq_llvm, "call i32 (i8*, ...)* @printf(i8* getelementptr ([%i x i8], [%i x i8]* %s, i32 0, i32 0) ", length, length, str_global);
+        int length = strlen(t_aux->token.token)-2;
+        fprintf(arq_llvm, "call i32 (i8*, ...) @printf(i8* getelementptr ([%i x i8], [%i x i8]* @STR_%i, i32 0, i32 0) ", length, length, contador_print_gerador);
+        contador_print_gerador++;
         gera_caractere(t_aux->irmaos);
+        fprintf(arq_llvm, ")\n");
     }
     return NULL;
 }
 
 void cria_str_global (char* str_global, int i) {
     char to_return[20];
-    sprintf(to_return, "%s_%i", "%STR", i);
+    sprintf(to_return, "%s_%i", "@STR", i);
     strcpy(str_global, to_return);
 }
 
 void gera_caractere(Tree* no) {
-    if (no == NULL) return;
+    if (no == NULL || !strcmp(no->token.token, ")")) return;
     if (strcmp(no->token.token, ",") == 0) {
-        fprintf(arq_llvm, "i32 %s, ", no->filhos->token.token);
+        char* param = analisa_funcao(no->filhos);
+        fprintf(arq_llvm, ", i32 %s", param);
         gera_caractere(no->filhos->irmaos);
     } else {
-        fprintf(arq_llvm, "i32 %s)", no->token.token);
+        char* param = analisa_funcao(no);
+        fprintf(arq_llvm, ", i32 %s", param);
     }
 }
 
@@ -353,6 +393,16 @@ char* gerar_loop_label() {
 }
 
 char* gerar_variavel() {
+    char* var = gerar_rotulo(&contador_variavel, LOCAL_V);
+    return var;
+}
+
+char* gerar_global() {
+    char* var = gerar_rotulo(&contador_variavel, GLOBAL_V);
+    return var;
+}
+
+char* gerar_temporario() {
     char* var = gerar_rotulo(&contador_variavel, LOCAL_V);
     return var;
 }
