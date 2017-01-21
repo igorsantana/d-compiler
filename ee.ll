@@ -1,6 +1,7 @@
 @STR_0 = internal constant [2 x i8] c"%i"
 declare i32 @printf(i8* , ...)
 define i32 @main(){
+store i32 1, i32* %G0
 %G0 = alloca i32
 store i32 1, i32* %G0
 br label %_loop_0

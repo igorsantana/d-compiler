@@ -43,6 +43,10 @@ Token   pegaProximoToken();
 Token getToken() {
     Token token = pegaProximoToken();
     token.categoria = analisarToken(token.token);
+    if (strcmp(token.categoria, "TOKEN_INVALIDO") == 0) {
+        printf("[ERRO LÉXICO] Token %s [Linha: %d, Coluna: %d] não foi identificado.\n", token.token, token.linha, token.coluna);
+        exit(1);
+    }
     return token;
 }
 

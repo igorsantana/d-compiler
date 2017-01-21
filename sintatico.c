@@ -46,10 +46,14 @@ Tree* preditivoDescendente() {
             indexA = retornaIndiceTerminal(a);
             desempilha(&p);
         } else if (!isupper(X->c[0])) {
-            printf("Símbolo inválido.%s\n",X->c);
+//            printf("Símbolo inválido.%s\n",X->c);
+            printf("[ERRO SINTÁTICO] Expressão inválida.\n");
+            exit(1);
             return NULL;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter <= 0) {
-            printf("Erro. erro de gramática.\n");
+//            printf("Erro. erro de gramática.\n");
+            printf("[ERRO SINTÁTICO] Expressão inválida.\n");
+            exit(1);
             return NULL;
         } else if (matrizPreditiva[indexX][indexA].indexCaracter > 0) {
             desempilha(&p);

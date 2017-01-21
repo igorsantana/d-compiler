@@ -19,6 +19,9 @@ void    atribuicao(Tree* arvore, Escopo* current);
 void    declaracao(Tree* arvore, Escopo* current);
 void    print_variaveis();
 
+// Erros:
+void erro_variavel_declarada(Escopo* current, Token variavel);
+void erro_lado_direito(Escopo* current, Token variavel);
 Escopo* get_raiz_escopo(){
     return raiz_escopo;
 }
@@ -38,7 +41,7 @@ Tree* executa_semantico(Tree* arvore) {
     raiz_escopo     = create_escopo();
     raiz_variavel   = create_lista();
     analisa_arvore(arvore, NULL);
-    print_variaveis();
+//    print_variaveis();
     return arvore;
 }
 
@@ -47,7 +50,7 @@ void declaracao(Tree* arvore, Escopo* current) {
         raiz_variavel->nome = arvore->filhos->token.token;
     }
     ItemVariavel* v = get_variavel(raiz_variavel, arvore->filhos->token.token);
-    if(v == NULL){
+    if (v == NULL){
         add_variavel(raiz_variavel, arvore->filhos->token.token);
     }
     add_item(raiz_variavel, arvore->filhos->token.token,
@@ -56,12 +59,12 @@ void declaracao(Tree* arvore, Escopo* current) {
 
 void atribuicao(Tree* arvore, Escopo* current) {
     ValorVariavel* declaracao = encontra_escopo_declarado(raiz_variavel, raiz_escopo, current->nome, arvore->filhos->token.token);
-    if(declaracao == NULL){
-        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] não foi declarada previamente. \n", arvore->filhos->token.token,
-                arvore->filhos->token.linha, arvore->filhos->token.coluna);
+    if (declaracao == NULL) {
+        Token erro = arvore->filhos->token;
+        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] não foi declarada previamente. \n", erro.token, erro.linha, erro.coluna);
         exit(1);
     }
-    if(strcmp(declaracao->escopo->nome, current->nome) != 0 ){
+    if (strcmp(declaracao->escopo->nome, current->nome) != 0) {
         declaracao->escapa = 1;
     }
 }
@@ -91,6 +94,34 @@ void print_variaveis() {
 //    printf("%s - %s\n", current->nome, current->primeiro->escopo->nome);
 //    printf("%s - %s\n", current->proximo->nome, current->proximo->primeiro->escopo->nome);
 //    printf("%s - %s\n", current->proximo->proximo->nome, current->proximo->proximo->primeiro->escopo->nome);
+//    printf("%s - %s\n", current->proximo->proximo->proximo->nome, current->proximo->proximo->proximo->primeiro->escopo->nome);
+}
+
+void erro_variavel_declarada(Escopo* current, Token variavel) {
+    ValorVariavel* declaracao = encontra_escopo_declarado(raiz_variavel, raiz_escopo, current->nome, variavel.token);
+    if ((declaracao != NULL) && (strcmp(declaracao->escopo->nome, current->nome) == 0)) {
+        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] declarada previamente. \n", variavel.token, variavel.linha, variavel.coluna);
+        exit(1);
+    }
+}
+
+void erro_lado_direito(Escopo* current, Token variavel) {
+    ValorVariavel* declaracao = encontra_escopo_declarado(raiz_variavel, raiz_escopo, current->nome, variavel.token);
+    if ((declaracao == NULL) && (strcmp(variavel.categoria, "id") == 0)) {
+        printf("[ERRO SEMÂNTICO] Variável %s [Linha: %d, Coluna: %d] nao declarada previamente. \n", variavel.token, variavel.linha, variavel.coluna);
+        exit(1);
+    }
+}
+
+void erro_tipos_incompativeis(Escopo* current, Tree* variavel) {
+    ValorVariavel* esquerda = encontra_escopo_declarado(raiz_variavel, raiz_escopo, current->nome, variavel->filhos->token.token);
+    ValorVariavel* direita  = encontra_escopo_declarado(raiz_variavel, raiz_escopo, current->nome, variavel->filhos->irmaos->token.token);
+    if (strcmp(variavel->filhos->irmaos->token.categoria, "id") == 0) {
+        if (strcmp(esquerda->tipo, direita->tipo) != 0) {
+            printf("[ERRO SEMÂNTICO] Atribuição de tipos incompatíveis na variavel %s. [Linha: %d, Coluna: %d] \n", variavel->filhos->token.token, variavel->filhos->token.linha, variavel->filhos->token.coluna);
+            exit(1);
+        }
+    }
 }
 
 void analisa_arvore(Tree* arvore, Escopo* pai) {
@@ -101,32 +132,41 @@ void analisa_arvore(Tree* arvore, Escopo* pai) {
         current = add_escopo(raiz_escopo, get_nome_escopo(), -1, pai);
     }
     
-    // Nova Declaracao:
+    // Declaracao sem definir valor:
     if ((strcmp(arvore->token.token, "int") == 0)
-     || (strcmp(arvore->token.token, "string") == 0)) {
+     || (strcmp(arvore->token.token, "char") == 0)) {
         Tree* filho = arvore->filhos;
         if (filho != NULL) {
             if (strcmp(filho->token.categoria, "id") == 0) {
-                
-//                printf("%s - %s\n", filho->token.token, current->nome);
+                erro_variavel_declarada(current, filho->token);
                 add_variavel(raiz_variavel, filho->token.token);
                 add_item(raiz_variavel, filho->token.token, create(current, arvore->token.token, NULL));
             }
         }
     }
     
-    // Nova Atribuicao/Declaracao:
     if (strcmp(arvore->token.token, "=") == 0) {
-        if(strcmp(arvore->pai->token.categoria, "PALAVRA_RESERVADA") == 0){
+        
+        // Declaracao:
+        if (strcmp(arvore->pai->token.categoria, "PALAVRA_RESERVADA") == 0) {
+//            erro_declaracao(arvore);
+            erro_variavel_declarada(current, arvore->filhos->token);
+            erro_lado_direito(current, arvore->filhos->irmaos->token);
             
-            erro_declaracao(arvore);
             declaracao(arvore, current);
+            
+            erro_tipos_incompativeis(current, arvore);
         }
-        if(strcmp(arvore->pai->token.token, ";") == 0){
+        
+        // Atribuicao:
+        if (strcmp(arvore->pai->token.token, ";") == 0) {
+            erro_lado_direito(current, arvore->filhos->irmaos->token);
+            erro_tipos_incompativeis(current, arvore);
             atribuicao(arvore, current);
         }
     }
-    if(strcmp(arvore->token.token, "writeln") == 0){
+    
+    if (strcmp(arvore->token.token, "writeln") == 0){
         Tree* aux = arvore->filhos->filhos;
         if(strcmp(aux->token.categoria, "_StringLiteral") == 0){
             prints[contador_print] = aux->token.token;
@@ -139,7 +179,7 @@ void analisa_arvore(Tree* arvore, Escopo* pai) {
     if(arvore->filhos != NULL){
         analisa_arvore(arvore->filhos, current);
     }
-    if(arvore->irmaos != NULL){
+    if (arvore->irmaos != NULL){
         analisa_arvore(arvore->irmaos, current);
     }
     
