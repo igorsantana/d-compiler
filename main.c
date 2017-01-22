@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
     fclose(arquivo);
     
     executa_semantico(raiz);
-    
+
     gerador_intermediario(raiz, arq_no_extension);
     
     escreve_assembly(arq_no_extension);

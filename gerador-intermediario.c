@@ -62,7 +62,7 @@ ValorVariavel* pega_valor_variavel(char* var);
 char* comando_comp_LLVM(char * str);
 void cria_str_global(char* str_global, int i);
 // Teste:
-void gera_caractere(Tree* no);
+char* gera_caractere(Tree* no);
 
 int gerador_intermediario(Tree* arvore, char* filename) {
     lista_escopo = get_raiz_escopo();
@@ -186,7 +186,6 @@ char* gera_statement(Tree* no) {
 }
 
 char* gera_simbolo(Tree* no) {
-//    char* buffer = NULL;
     char* variavel = NULL;
     char* a = NULL;
     char* b = NULL;
@@ -194,23 +193,9 @@ char* gera_simbolo(Tree* no) {
     a = analisa_funcao(current);
     current = current->irmaos;
     b = analisa_funcao(current);
-
     variavel = gerar_variavel();
-    
-    
-//    buffer = variavel;
-//    char* op = gera_operador(no->token.token[0]);
-    char* op = "add";
-
-//    buffer = concat_str(buffer, " = ");
-//    buffer = concat_str(buffer, " i32 ");
-//    buffer = concat_str(buffer, a);
-//    buffer = concat_str(buffer, " , ");
-//    buffer = concat_str(buffer, b);
-//    buffer = concat_str(buffer, "\n");
-
+    char* op = gera_operador(no->token.token[0]);
     fprintf(arq_llvm, "%s = %s i32 %s, %s\n", variavel,op,a,b);
-
     return variavel;
 }
 
@@ -225,7 +210,7 @@ char* gera_declaracao(Tree* no) {
     if(!item->escapa && atual == no){
         return;
     }else if(item->escapa){
-        esq = analisa_funcao(no);
+        esq = gerar_uso_variavel(atual);
         fprintf(arq_llvm, "%s = alloca i32\n", esq);       
     }
     if (strcmp("=", no->token.token)) {
@@ -298,14 +283,19 @@ char* comando_comp_LLVM(char * str) {
 char* gera_if(Tree* no) {
     no = no->filhos;
     Tree* exp_tree = no->filhos;
+    Tree* bloco_tree = no->irmaos;
+    if(!strcmp(exp_tree->token.token,")")){
+        bloco_tree = exp_tree->irmaos;
+        exp_tree = exp_tree->filhos;
+    }
     char* exp_rst = analisa_funcao(exp_tree);
     char* if_label = gerar_if_label();
-
-
     fprintf(arq_llvm, "br i1 %s, label %_t_%s, label %_end_%s\n_t_%s:\n", exp_rst, if_label, if_label, if_label);
-    no = no->irmaos;
-    analisa_funcao(no);
+    analisa_funcao(bloco_tree);
     fprintf(arq_llvm, "br label %_end_%s\n_end_%s:", if_label, if_label);
+    if(!strcmp(no->filhos->token.token,")")){
+        analisa_funcao(no->irmaos);
+    }
     return NULL;
 
 }
@@ -371,10 +361,9 @@ char* gera_write(Tree* no) {
         }
 
         int length = strlen(t_aux->token.token)-2;
-        fprintf(arq_llvm, "call i32 (i8*, ...) @printf(i8* getelementptr ([%i x i8], [%i x i8]* @STR_%i, i32 0, i32 0) ", length, length, contador_print_gerador);
+        char* params = gera_caractere(t_aux->irmaos);
+        fprintf(arq_llvm, "call i32 (i8*, ...) @printf(i8* getelementptr ([%i x i8], [%i x i8]* @STR_%i, i32 0, i32 0) %s)\n", length, length, contador_print_gerador,params);
         contador_print_gerador++;
-        gera_caractere(t_aux->irmaos);
-        fprintf(arq_llvm, ")\n");
     }
     return NULL;
 }
@@ -385,16 +374,21 @@ void cria_str_global (char* str_global, int i) {
     strcpy(str_global, to_return);
 }
 
-void gera_caractere(Tree* no) {
-    if (no == NULL || !strcmp(no->token.token, ")")) return;
+char* gera_caractere(Tree* no) {
+    if (no == NULL || !strcmp(no->token.token, ")")) return "";
+    char buffer[100];
+    char* ret = malloc(sizeof(char) * 100);
+    strcpy(buffer,ret);
     if (strcmp(no->token.token, ",") == 0) {
         char* param = analisa_funcao(no->filhos);
-        fprintf(arq_llvm, ", i32 %s", param);
-        gera_caractere(no->filhos->irmaos);
+        sprintf(buffer, ", i32 %s", param);
+        strcat(buffer,gera_caractere(no->filhos->irmaos));
     } else {
         char* param = analisa_funcao(no);
-        fprintf(arq_llvm, ", i32 %s", param);
+        sprintf(buffer, ", i32 %s", param);
     }
+    strcpy(ret,buffer);
+    return ret;
 }
 
 char* gera_operador(char str) {

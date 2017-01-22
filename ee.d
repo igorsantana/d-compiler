@@ -1,8 +1,10 @@
 {
-    int a = 1;
-    while (a < 3){
-        a = a + 1;
-int b = a;
-        writeln("%i",b);
+    int n = 10;
+    int result = 1;
+    while (n > 1){
+        result = result * n;
+        n = n - 1;
     }
+    
+    writeln("Resultado do farorial de 10: %i \n",result);
 }

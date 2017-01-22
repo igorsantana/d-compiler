@@ -149,7 +149,6 @@ void analisa_arvore(Tree* arvore, Escopo* pai) {
         
         // Declaracao:
         if (strcmp(arvore->pai->token.categoria, "PALAVRA_RESERVADA") == 0) {
-//            erro_declaracao(arvore);
             erro_variavel_declarada(current, arvore->filhos->token);
             erro_lado_direito(current, arvore->filhos->irmaos->token);
             

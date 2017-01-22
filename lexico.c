@@ -37,6 +37,8 @@ char    le_char_arq();
 
 Token   eof_token();
 Token   pegaProximoToken();
+int eh_caracter_com_quebra(char c);
+char pega_ascii(char c);
 
 /* Implementação das funções externas */
 
@@ -162,30 +164,34 @@ Token pegaProximoToken() {
         c = caracter_buf;
         caracter_buf = '#';
     }
-    
     while(1){
         if(c == '/'){
-            c = le_char_arq();
-            if(c == '*'){
-                while(c != EOF){
-                    c = le_char_arq();
-                    if(c == '*'){
-                        c = le_char_arq();
-                        if(c == '/'){
-                            c = le_char_arq();
+            caracter_buf = le_char_arq();
+            if(caracter_buf == '*'){
+                while(caracter_buf != EOF){
+                    caracter_buf = le_char_arq();
+                    if(caracter_buf == '*'){
+                        caracter_buf = le_char_arq();
+                        if(caracter_buf == '/'){
+                            caracter_buf = le_char_arq();
                             break;
                         }
                     }
                 }
                 
-            } else if( c == '/'){
-                c = le_char_arq();
-                while(c != '\n'){
-                    c = le_char_arq();
+            } else if( caracter_buf == '/'){
+                caracter_buf = le_char_arq();
+                while(caracter_buf != '\n'){
+                    caracter_buf = le_char_arq();
                 }
             }
         }
+        if(caracter_buf == EOF){
+            c = caracter_buf;
+        }
+        
         int tipo_sep = verifica_separador(c);
+//        printf("%c#%i\n",c,tipo_sep);
         if(tipo_sep == NAO_SEPARADOR){
             buf[buf_inc] = c;
             buf_inc++;
@@ -198,10 +204,26 @@ Token pegaProximoToken() {
                 posicaoColuna++;
                 while(c!= '\"'){
                     c = fgetc(arquivo_lexico);
-                    buf[buf_inc] = c;
+                    if(c == '\\'){
+                        char aux = fgetc(arquivo_lexico);
+                        if(eh_caracter_com_quebra(aux)){
+                            aux = pega_ascii(aux);
+                            buf[buf_inc] = aux;
+                            offsetGeral++;
+                            posicaoColuna++;                    
+                        }else{
+                            buf[buf_inc++] = c;
+                            buf[buf_inc] = aux;
+                            offsetGeral+=2;
+                            posicaoColuna+=2;                    
+                        }
+                    }else{
+                        buf[buf_inc] = c;
+                        offsetGeral++;
+                        posicaoColuna++;                    
+                    }
+
                     buf_inc++;
-                    offsetGeral++;
-                    posicaoColuna++;
                 }
             }
             VAZIO_FLAG = 0;
@@ -259,4 +281,30 @@ Token pegaProximoToken() {
     }
     
     return eof_token();
+}
+
+
+int eh_caracter_com_quebra(char c){
+    char especiais[3] = {'n','t','0'};
+    int i;
+    for(i=0;i<3;i++){
+        if(especiais[i]==c){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+char pega_ascii(char c){
+    if(c=='n'){
+        return '\n';
+    }
+    
+    if(c == 't'){
+        return '\t';
+    }
+    if(c == '0'){
+        return '\0';
+    }
+    return 0;
 }

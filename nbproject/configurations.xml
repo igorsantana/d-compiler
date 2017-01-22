@@ -41,7 +41,9 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>algoritmos/conta-n.d</itemPath>
     <itemPath>ee.d</itemPath>
+    <itemPath>algoritmos/fibonacci.d</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -63,6 +65,10 @@
           </linkerDynSerch>
         </linkerTool>
       </compileType>
+      <item path="algoritmos/conta-n.d" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="algoritmos/fibonacci.d" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="automato.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="automato.h" ex="false" tool="3" flavor2="0">
@@ -133,6 +139,10 @@
           </linkerDynSerch>
         </linkerTool>
       </compileType>
+      <item path="algoritmos/conta-n.d" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="algoritmos/fibonacci.d" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="automato.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="automato.h" ex="false" tool="3" flavor2="0">
